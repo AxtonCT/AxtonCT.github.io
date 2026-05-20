@@ -1,155 +1,155 @@
 ---
-import HeaderLink from './HeaderLink.astro';
+import { SITE_TITLE } from '../consts';
+
+const path = Astro.url.pathname;
+const isActive = (href: string) => {
+	if (href === '/') return path === '/' || path === '';
+	return path === href || path.startsWith(href + '/') || path === href + '/';
+};
+
+const links = [
+	{ n: '01', href: '/', label: 'Index' },
+	{ n: '02', href: '/blog', label: 'Writing' },
+	{ n: '03', href: '/about', label: 'About' },
+];
 ---
 
-<header class="site-header">
-	<div class="container">
-		<nav class="nav">
-			<a href="/" class="brand" aria-label="AxtonDex — Home">
-				<span class="dot" aria-hidden="true"></span>
-				<span class="brand-label">AXTONDEX</span>
-				<sup class="brand-index" aria-hidden="true">01</sup>
+<header class="topnav">
+	<a class="brand" href="/">
+		<span class="mark"></span>
+		<span><b>{SITE_TITLE}</b><sup>01</sup></span>
+	</a>
+
+	<nav>
+		{links.map((l) => (
+			<a href={l.href} class={isActive(l.href) ? 'active' : ''}>
+				<span class="n">{l.n}</span>{l.label}
 			</a>
+		))}
+	</nav>
 
-			<div class="nav-links">
-				<HeaderLink href="/" index="01">Index</HeaderLink>
-				<HeaderLink href="/blog" index="02">Writing</HeaderLink>
-				<HeaderLink href="/about" index="03">About</HeaderLink>
-			</div>
-
-			<div class="nav-status hide-sm">
-				<span class="status-live">
-					<span class="dot dot-live" aria-hidden="true"></span>
-					<span>LIVE · V1.0</span>
-				</span>
-				<span class="sep">/</span>
-				<span class="clock" id="site-clock" aria-label="本地时间">--:--:--</span>
-				<span class="sep">/</span>
-				<span class="tz">UTC+8</span>
-			</div>
-		</nav>
+	<div class="right">
+		<span class="live"><span class="d"></span> Live · v1.0</span>
+		<span class="sep">/</span>
+		<time id="topnav-clock" datetime="">—:—:—</time>
+		<span class="sep">/</span>
+		<span>UTC+8</span>
 	</div>
 </header>
 
 <script>
 	function tick() {
-		const el = document.getElementById('site-clock');
+		const el = document.getElementById('topnav-clock') as HTMLTimeElement | null;
 		if (!el) return;
-		const fmt = new Intl.DateTimeFormat('en-GB', {
-			hour: '2-digit',
-			minute: '2-digit',
-			second: '2-digit',
-			hour12: false,
-			timeZone: 'Asia/Shanghai',
-		});
-		el.textContent = fmt.format(new Date());
+		const d = new Date();
+		const pad = (n: number) => String(n).padStart(2, '0');
+		const t = `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+		el.textContent = t;
+		el.dateTime = d.toISOString();
 	}
 	tick();
 	setInterval(tick, 1000);
 </script>
 
 <style>
-	.site-header {
-		position: relative;
-		z-index: 10;
-		padding: 20px 0;
-		border-bottom: 1px solid var(--line);
-	}
-	.nav {
+	.topnav {
+		position: fixed;
+		top: 0; left: 0; right: 0;
+		z-index: 50;
 		display: grid;
-		grid-template-columns: 1fr auto 1fr;
+		grid-template-columns: auto 1fr auto;
 		align-items: center;
-		gap: var(--s-5);
-	}
-	.brand {
-		display: inline-flex;
-		align-items: baseline;
-		gap: 8px;
-		color: var(--fg);
+		padding: 18px 32px;
+		background: linear-gradient(180deg, rgba(10, 10, 10, .9), rgba(10, 10, 10, .5) 70%, transparent);
+		backdrop-filter: blur(12px) saturate(140%);
+		-webkit-backdrop-filter: blur(12px) saturate(140%);
 		font-family: var(--font-mono);
-		font-size: var(--text-mono);
+		font-size: 11px;
+		letter-spacing: .08em;
 		text-transform: uppercase;
-		letter-spacing: 0.12em;
+		color: var(--ink-dim);
+	}
+
+	.brand {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		color: var(--ink);
 		text-decoration: none;
 	}
-	.brand-label {
-		font-weight: 500;
-	}
-	.brand-index {
-		color: var(--mute-3);
-		font-size: 9px;
-		letter-spacing: 0.08em;
-	}
-	.dot {
-		display: inline-block;
-		width: 6px;
-		height: 6px;
+	.brand .mark {
+		width: 8px; height: 8px;
 		border-radius: 50%;
-		background: var(--fg);
-		margin-right: 2px;
-		transform: translateY(-1px);
+		background: var(--ink);
+		box-shadow: 0 0 0 4px rgba(250, 250, 250, .06);
 	}
-	.dot-live {
-		background: var(--fg);
-		animation: live-pulse 2s ease-in-out infinite;
+	.brand b { font-weight: 500; letter-spacing: .04em; }
+	.brand sup {
+		color: var(--ink-mid);
+		margin-left: 2px;
+		font-weight: 400;
+		font-size: 9px;
+		letter-spacing: .04em;
 	}
-	@keyframes live-pulse {
-		0%, 100% { opacity: 1; }
-		50% { opacity: 0.4; }
-	}
-	.nav-links {
-		display: inline-flex;
-		gap: var(--s-6);
+
+	nav {
 		justify-self: center;
+		display: flex;
+		gap: 4px;
 	}
-	.nav-status {
-		justify-self: end;
-		display: inline-flex;
-		align-items: center;
-		gap: var(--s-3);
-		font-family: var(--font-mono);
-		font-size: var(--text-mono);
-		color: var(--mute-2);
-		letter-spacing: 0.06em;
+	nav a {
+		color: var(--ink-dim);
+		text-decoration: none;
+		padding: 6px 14px;
+		position: relative;
+		cursor: pointer;
+		transition: color .2s;
 	}
-	.status-live {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
+	nav a:hover { color: var(--ink); }
+	nav a.active { color: var(--ink); }
+	nav a.active::after {
+		content: "";
+		position: absolute;
+		left: 14px; right: 14px;
+		bottom: -2px;
+		height: 1px;
+		background: var(--ink);
 	}
-	.sep {
-		color: var(--mute-4);
-	}
-	.clock {
-		color: var(--fg);
-		font-variant-numeric: tabular-nums;
-	}
-	.tz {
-		color: var(--mute-2);
+	nav a .n {
+		color: var(--muted);
+		margin-right: 6px;
+		font-size: 9px;
+		vertical-align: 1px;
 	}
 
+	.right { display: flex; align-items: center; gap: 18px; }
+	.right .live { display: inline-flex; align-items: center; gap: 8px; color: var(--ink); }
+	.right .live .d {
+		width: 6px; height: 6px;
+		border-radius: 50%;
+		background: var(--ink);
+		animation: nav-pulse 2.2s infinite;
+	}
+	@keyframes nav-pulse {
+		0%, 100% { opacity: .35; transform: scale(1); }
+		50%      { opacity: 1;   transform: scale(1.15); }
+	}
+	.right .sep { color: var(--muted); }
+	.right time { font-variant-numeric: tabular-nums; }
+
+	@media (max-width: 1100px) {
+		.right time, .right .sep:nth-of-type(2) { display: none; }
+	}
 	@media (max-width: 920px) {
-		.nav {
-			grid-template-columns: auto 1fr;
-		}
-		.nav-links {
-			justify-self: end;
-			gap: var(--s-5);
-		}
-		.nav-status {
-			display: none;
-		}
+		.topnav { padding: 14px 18px; grid-template-columns: auto auto; gap: 12px; }
+		nav { justify-self: end; gap: 2px; }
+		nav a { padding: 6px 8px; font-size: 10.5px; letter-spacing: .06em; }
+		nav a .n { display: none; }
+		nav a.active::after { left: 8px; right: 8px; }
+		.right { display: none; }
 	}
-
 	@media (max-width: 560px) {
-		.site-header {
-			padding: 14px 0;
-		}
-		.nav-links {
-			gap: var(--s-4);
-		}
-		.brand-index {
-			display: none;
-		}
+		.brand sup { display: none; }
+		nav a { padding: 4px 6px; font-size: 10px; }
 	}
 </style>

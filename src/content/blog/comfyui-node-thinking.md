@@ -2,8 +2,9 @@
 title: '节点图思维：从 prompt 到 ComfyUI 的认知跳跃'
 subtitle: 'graph thinking — why nodes beat prompts'
 description: '当 prompt 不够用时，节点图给你的不是更多参数，而是另一种调试方式'
-tag: 'AI / Visual'
+tag: 'ai-visual'
 pubDate: '2026-05-12'
+readMinutes: 9
 ---
 
 写文章中 — 草稿在路上。

@@ -1,130 +1,89 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 import { SITE_TITLE } from '../consts';
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<BaseHead title={`404 — ${SITE_TITLE}`} description="Page not found" />
-	</head>
-	<body>
-		<Header />
-		<main class="not-found">
-			<div class="container">
-				<div class="kicker mono uppercase">
-					<span class="muted-3">N°</span>
-					<span class="muted-1">404</span>
-					<span class="muted-4">/</span>
-					<span class="muted-1">Not Found</span>
-				</div>
+<BaseLayout title={`404 · ${SITE_TITLE}`} description="Page not found">
+	<section class="nf">
+		<div class="big">
+			<span class="sig">SIG · 11 · Path not in the index.</span>
+			<h1 class="num">4<span class="slash">/</span>04</h1>
+			<p class="msg">
+				这条路径不存在，或者从来没存在过。 — 可能是我重构时把它带走了。<br />
+				试试 <a class="underline" href="/">index</a> 或 <a class="underline" href="/blog/">writing</a>。
+			</p>
+		</div>
+		<div class="actions">
+			<a href="/">cd / index</a>
+			<a href="/blog/">/ writing</a>
+			<a class="ghost" href="/about/">/ about</a>
+		</div>
+	</section>
+</BaseLayout>
 
-				<h1 class="big display">404<span class="period">.</span></h1>
+<style>
+	.nf {
+		min-height: calc(100vh - 200px);
+		display: grid;
+		grid-template-rows: 1fr auto;
+		padding: 120px 32px 80px;
+		gap: 40px;
+	}
+	.big {
+		align-self: center;
+		justify-self: center;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+		gap: 30px;
+	}
+	.big .num {
+		font-family: var(--font-display);
+		font-weight: 500;
+		font-size: clamp(160px, 32vw, 480px);
+		line-height: .85;
+		letter-spacing: -.05em;
+		margin: 0;
+	}
+	.big .num .slash { color: var(--ink-mid); font-weight: 300; }
+	.big .sig {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		letter-spacing: .12em;
+		color: var(--ink-mid);
+		text-transform: uppercase;
+	}
+	.big .msg {
+		color: var(--ink-dim);
+		font-size: 18px;
+		line-height: 1.5;
+		max-width: 520px;
+		margin: 0 auto;
+	}
+	.actions {
+		justify-self: center;
+		display: flex;
+		gap: 32px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: .1em;
+		text-transform: uppercase;
+	}
+	.actions a {
+		color: var(--ink);
+		padding: 14px 24px;
+		border: 1px solid var(--muted);
+		transition: background .2s, color .2s, border-color .2s;
+	}
+	.actions a:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+	.actions a.ghost { border-color: transparent; color: var(--ink-mid); }
+	.actions a.ghost:hover { color: var(--ink); background: transparent; }
 
-				<p class="lead">
-					这条路径在仓库里找不到对应文件。
-				</p>
-				<p class="hint mono uppercase muted-2">
-					Either the URL was mistyped, or the page moved.
-				</p>
-
-				<div class="actions">
-					<a class="btn mono uppercase" href="/">
-						<span class="arrow muted-3">→</span>
-						<span>Home</span>
-					</a>
-					<a class="btn mono uppercase" href="/blog">
-						<span class="arrow muted-3">→</span>
-						<span>Writing</span>
-					</a>
-				</div>
-			</div>
-		</main>
-		<Footer />
-
-		<style>
-			.not-found {
-				padding: var(--s-10) 0 var(--s-9);
-				min-height: 60vh;
-			}
-			.kicker {
-				display: inline-flex;
-				gap: 8px;
-				margin-bottom: var(--s-7);
-				font-size: var(--text-mono);
-			}
-			.big {
-				font-family: var(--font-display);
-				font-weight: 800;
-				font-size: clamp(96px, 26vw, 320px);
-				line-height: 0.85;
-				letter-spacing: -0.06em;
-				margin: 0;
-				color: var(--fg);
-			}
-			.period {
-				color: var(--mute-3);
-			}
-			.lead {
-				margin: var(--s-7) 0 var(--s-3);
-				font-size: 20px;
-				color: var(--fg);
-				max-width: 520px;
-			}
-			.hint {
-				font-size: var(--text-mono);
-				max-width: 520px;
-			}
-			.actions {
-				margin-top: var(--s-7);
-				display: flex;
-				flex-wrap: wrap;
-				gap: var(--s-4);
-			}
-			.btn {
-				display: inline-flex;
-				align-items: center;
-				gap: 8px;
-				padding: 12px 18px;
-				border: 1px solid var(--line-strong);
-				color: var(--fg);
-				font-size: var(--text-mono);
-				transition: background 0.15s ease, border-color 0.15s ease;
-			}
-			.btn:hover {
-				border-color: var(--fg);
-				background: rgba(250, 250, 250, 0.03);
-			}
-
-			@media (max-width: 920px) {
-				.not-found {
-					padding: var(--s-9) 0 var(--s-7);
-				}
-				.kicker {
-					margin-bottom: var(--s-5);
-				}
-				.lead {
-					font-size: 18px;
-				}
-			}
-
-			@media (max-width: 560px) {
-				.not-found {
-					padding: var(--s-7) 0 var(--s-6);
-				}
-				.lead {
-					font-size: 17px;
-				}
-				.actions {
-					gap: var(--s-3);
-				}
-				.btn {
-					padding: 10px 14px;
-					font-size: 11px;
-				}
-			}
-		</style>
-	</body>
-</html>
+	@media (max-width: 920px) {
+		.nf { padding: 100px 22px 60px; }
+		.actions { gap: 10px; flex-wrap: wrap; justify-content: center; }
+		.actions a { padding: 12px 18px; font-size: 10.5px; }
+		.big .msg { font-size: 15px; }
+		.big .num { font-size: clamp(140px, 40vw, 200px); }
+	}
+</style>

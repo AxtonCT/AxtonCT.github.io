@@ -1,5 +1,74 @@
 ---
-import StatusBar from './StatusBar.astro';
+import { AUTHOR } from '../consts';
 ---
 
-<StatusBar />
+<footer class="site-footer">
+	<div class="row">
+		<div>
+			<h5>Built with</h5>
+			<p>Astro 6.x · MDX</p>
+			<p>Deployed on GitHub Pages</p>
+		</div>
+		<div>
+			<h5>Set in</h5>
+			<p>Bricolage Grotesque</p>
+			<p>Atkinson Hyperlegible</p>
+			<p>JetBrains Mono</p>
+		</div>
+		<div>
+			<h5>Reach</h5>
+			<p><a class="underline" href={`mailto:${AUTHOR.email}`}>{AUTHOR.email}</a></p>
+			<p><a class="underline" href={AUTHOR.github} target="_blank" rel="noopener me">github · /AxtonCT</a></p>
+			<p><a class="underline" href={AUTHOR.twitter} target="_blank" rel="noopener me">twitter · @AxtonCT</a></p>
+		</div>
+		<div>
+			<h5>©</h5>
+			<p>{new Date().getFullYear()} — {AUTHOR.name}</p>
+			<p class="muted">Made with caffeine.</p>
+		</div>
+	</div>
+</footer>
+
+<style>
+	.site-footer {
+		padding: 80px 32px 100px;
+		border-top: 1px solid var(--hair);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		text-transform: uppercase;
+		letter-spacing: .06em;
+	}
+	.row {
+		max-width: var(--container);
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		gap: 32px;
+	}
+	.row h5 {
+		color: var(--ink-mid);
+		font-size: 10px;
+		letter-spacing: .14em;
+		margin: 0 0 12px;
+		font-weight: 400;
+		font-family: var(--font-mono);
+	}
+	.row p {
+		margin: 0 0 6px;
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 12px;
+		line-height: 1.6;
+		text-transform: none;
+		letter-spacing: 0;
+		font-weight: 400;
+	}
+	.row p.muted { color: var(--ink-mid); }
+	.row a { color: var(--ink); }
+
+	@media (max-width: 920px) {
+		.site-footer { padding: 50px 22px 80px; }
+		.row { grid-template-columns: 1fr 1fr; gap: 24px; }
+	}
+</style>

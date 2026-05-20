@@ -1,156 +1,82 @@
 ---
+import { AUTHOR, BUILD } from '../consts';
 import { getCollection } from 'astro:content';
 
-interface Props {
-	marquee?: string;
-}
-
-const { marquee = 'CURRENTLY WRITING ON COMFYUI WORKFLOW · MIDJOURNEY V7 STUDIES · ASTRO 6 NOTES · CURSOR PRODUCTIVITY DATA' } = Astro.props;
-
 const posts = await getCollection('blog');
-const count = String(posts.length).padStart(2, '0');
-const year = new Date().getFullYear();
-// Stable build hash — derived from post count + year so it changes only when content does
-const buildHash = (count + year.toString(36) + 'axt')
-	.split('')
-	.reduce((h, c) => ((h << 5) - h + c.charCodeAt(0)) | 0, 0)
-	.toString(16)
-	.slice(-6);
+const postCount = String(posts.length).padStart(2, '0');
 ---
 
-<footer class="status-bar" role="contentinfo">
-	<div class="container">
-		<div class="strip">
-			<div class="cell brand">
-				<span class="star" aria-hidden="true">★</span>
-				<span>Axton-Index</span>
-			</div>
-			<div class="cell domain hide-sm">
-				<span class="uppercase muted-2">FRONTEND × AI VISUAL DESIGN</span>
-			</div>
-			<div class="cell tagline hide-md">
-				<span class="muted-3">把"工程师怎么思考"带进"设计怎么落地"。</span>
-			</div>
-			<div class="cell marquee-cell">
-				<div class="marquee" aria-hidden="true">
-					<span class="marquee-track">
-						<span class="marquee-content">· {marquee} ·</span>
-						<span class="marquee-content" aria-hidden="true">· {marquee} ·</span>
-					</span>
-				</div>
-			</div>
-			<div class="cell meta posts hide-sm">
-				<span class="muted-3">POSTS</span>
-				<span class="muted-1">{count}</span>
-			</div>
-			<div class="cell meta build hide-sm">
-				<span class="muted-3">BUILD</span>
-				<code class="muted-1">#{buildHash}</code>
-			</div>
-			<div class="cell meta tz hide-md">
-				<span class="muted-3">TZ</span>
-				<span class="muted-1">UTC+8</span>
-			</div>
-			<div class="cell copyright">
-				<span class="muted-3">© {year} — AXTONDEX</span>
-			</div>
-		</div>
-	</div>
+<footer class="status" aria-label="status bar">
+	<span class="seg"><b>★ Axton-Index</b></span>
+
+	<span class="seg marquee hide-sm" aria-hidden="true">
+		<span>
+			Frontend × AI Visual Design · 把工程师怎么思考，带进设计怎么落地。 ·
+			Currently writing on ComfyUI workflow & diffusion fundamentals. ·
+			{AUTHOR.city} · 远程协作 ·
+			Frontend × AI Visual Design · 把工程师怎么思考，带进设计怎么落地。 ·
+			{AUTHOR.city} · 远程协作 ·
+		</span>
+	</span>
+
+	<span class="seg hide-sm">Posts <b>{postCount}</b></span>
+	<span class="seg hide-sm">Build <b>{BUILD}</b></span>
+	<span class="seg hide-sm">Tz <b>{AUTHOR.tz}</b></span>
+	<span class="seg right">© {new Date().getFullYear()} — {AUTHOR.name}</span>
 </footer>
 
 <style>
-	.status-bar {
-		border-top: 1px solid var(--line);
-		background: var(--bg);
-		padding: 14px 0;
+	.status {
+		position: fixed;
+		bottom: 0; left: 0; right: 0;
+		z-index: 50;
+		display: grid;
+		grid-template-columns: auto 1fr auto auto auto auto;
+		align-items: center;
+		gap: 18px;
+		padding: 10px 32px;
+		background: linear-gradient(0deg, rgba(10, 10, 10, .9), rgba(10, 10, 10, .3));
+		backdrop-filter: blur(10px);
+		border-top: 1px solid var(--hair);
 		font-family: var(--font-mono);
-		font-size: var(--text-mono-sm);
-		letter-spacing: 0.06em;
+		font-size: 10.5px;
+		letter-spacing: .06em;
+		color: var(--ink-mid);
 		text-transform: uppercase;
 	}
-	.strip {
-		display: flex;
-		align-items: center;
-		gap: var(--s-4);
+	.status b {
+		color: var(--ink);
+		font-weight: 500;
+		letter-spacing: .04em;
+		text-transform: none;
+	}
+	.status .seg { display: flex; align-items: center; gap: 8px; }
+	.status .right { justify-self: end; font-variant-numeric: tabular-nums; }
+	.status .marquee {
 		overflow: hidden;
 		white-space: nowrap;
+		color: var(--ink-mid);
 	}
-	.cell {
-		display: inline-flex;
-		align-items: center;
-		gap: 6px;
-		flex: 0 0 auto;
-	}
-	.cell.marquee-cell {
-		flex: 1 1 auto;
-		min-width: 0;
-		overflow: hidden;
-	}
-	.brand {
-		color: var(--fg);
-	}
-	.star {
-		font-size: 11px;
-		color: var(--fg);
-	}
-	.marquee {
-		overflow: hidden;
-		mask-image: linear-gradient(
-			to right,
-			transparent 0,
-			#000 24px,
-			#000 calc(100% - 24px),
-			transparent 100%
-		);
-		-webkit-mask-image: linear-gradient(
-			to right,
-			transparent 0,
-			#000 24px,
-			#000 calc(100% - 24px),
-			transparent 100%
-		);
-	}
-	.marquee-track {
-		display: inline-flex;
-		gap: 0;
-		animation: scroll 60s linear infinite;
-	}
-	.marquee-content {
+	.status .marquee > span {
 		display: inline-block;
-		padding-right: 32px;
-		color: var(--mute-2);
+		animation: status-scroll 60s linear infinite;
+		padding-right: 60px;
 	}
-	@keyframes scroll {
-		from {
-			transform: translateX(0);
-		}
-		to {
-			transform: translateX(-50%);
-		}
-	}
-	code {
-		font-family: var(--font-mono);
-		background: transparent;
-		padding: 0;
-		font-size: inherit;
+	@keyframes status-scroll {
+		0%   { transform: translateX(0); }
+		100% { transform: translateX(-50%); }
 	}
 
 	@media (max-width: 920px) {
-		.status-bar {
-			padding: 10px 0;
-		}
-		.strip {
-			gap: var(--s-3);
-		}
-	}
-
-	@media (max-width: 560px) {
-		.status-bar {
-			padding: 9px 0;
+		.status {
+			grid-template-columns: auto 1fr auto;
+			gap: 12px;
+			padding: 8px 14px;
 			font-size: 10px;
 		}
-		.strip {
-			gap: 10px;
-		}
+		.status .seg.hide-sm { display: none; }
+	}
+	@media (max-width: 560px) {
+		.status { padding: 7px 12px; }
 	}
 </style>

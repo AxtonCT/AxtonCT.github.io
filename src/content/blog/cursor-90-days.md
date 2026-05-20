@@ -2,8 +2,9 @@
 title: 'Cursor 用了 90 天之后的产能数据'
 subtitle: 'what it changed · what it did not'
 description: '我把过去 90 天用 Cursor 的实际产能拉出来——哪些环节真的快了，哪些只是感觉快了'
-tag: 'Workflow'
+tag: 'workflow'
 pubDate: '2026-03-30'
+readMinutes: 5
 ---
 
 写文章中 — 草稿在路上。

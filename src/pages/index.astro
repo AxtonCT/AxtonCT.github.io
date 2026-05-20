@@ -1,453 +1,498 @@
 ---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SectionHead from '../components/SectionHead.astro';
+import PostEntry from '../components/PostEntry.astro';
+import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import Frame from '../components/Frame.astro';
-import FormattedDate from '../components/FormattedDate.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_TITLE, SITE_DESCRIPTION, AUTHOR, BUILD } from '../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
-const featured = posts.find((p) => p.data.featured) ?? posts[0];
-const featuredHref = featured ? `/blog/${featured.id}/` : '/blog/';
+
+const featured = posts.find((p) => p.data.featured) || posts[0];
+const featIdx = featured ? posts.indexOf(featured) : 0;
+const featNum = featured ? String(posts.length - featIdx).padStart(3, '0') : '001';
+const featTag = featured?.data.tag?.replace('-', ' / ');
+const pad2 = (n: number) => String(n).padStart(2, '0');
+const featDate = featured ? `${featured.data.pubDate.getFullYear()}.${pad2(featured.data.pubDate.getMonth() + 1)}.${pad2(featured.data.pubDate.getDate())}` : '';
 
 const stack = [
-	{ key: 'Frontend', items: ['React', 'Next.js', 'Vue', 'Nuxt', 'TypeScript', 'Tailwind'] },
-	{ key: 'AI Visual', items: ['Midjourney', 'ComfyUI', 'Stable Diffusion', 'ControlNet'] },
-	{ key: 'Tools', items: ['Astro', 'Vite', 'Cursor', 'Claude Code', 'Vercel'] },
-];
+	{ g: 'Frontend',  n: '01', items: [['React',95],['Next.js',90],['TypeScript',92],['Vue · Nuxt',78],['Astro',70],['Vite',88]] },
+	{ g: 'AI Visual', n: '02', items: [['Midjourney',85],['ComfyUI',78],['Stable Diffusion',72],['Photoshop',60],['Figma',80]] },
+	{ g: 'Tooling',   n: '03', items: [['Cursor',85],['pnpm',90],['Linear',70],['Raycast',82],['Tailwind',88]] },
+] as const;
 
 const now = [
-	{ verb: 'Studying', subject: 'ComfyUI workflow & SD model fine-tuning' },
-	{ verb: 'Reading', subject: 'AI 视觉设计论文 + 工程实践' },
-	{ verb: 'Building', subject: 'this site, ongoing' },
+	{ en: 'Deep-diving <b>ComfyUI</b> workflow — graph thinking vs prompt engineering.', cjk: '节点图思维 vs prompt 工程' },
+	{ en: 'Reading on <b>diffusion fundamentals</b> — from DDPM to flow matching.', cjk: 'DDPM → Flow Matching' },
+	{ en: "Building a small tool that feeds <b>Figma frames</b> to SD for variations.", cjk: 'Figma → SD 变体小工具' },
 ];
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<section class="hero frame">
-				<Frame />
-				<div class="container">
-					<div class="topline">
-						<span class="topline-item mono uppercase">
-							<span class="muted-3">N°</span>
-							<span class="muted-1">01</span>
-							<span class="muted-4">/</span>
-							<span class="muted-1">Index</span>
-						</span>
-						<span class="topline-item mono uppercase muted-2 hide-md">
-							Frontend × AI Visual Design
-						</span>
-						<span class="topline-item mono uppercase muted-2 right">
-							{new Date().getFullYear()}
-						</span>
-					</div>
+<BaseLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
 
-					<h1 class="hero-stack" aria-label="AxtonDex">
-						<span class="line-1">Axton</span>
-						<span class="line-2">Dex<span class="period">.</span></span>
-					</h1>
+	<section class="hero">
+		<div class="frame-corners"><i class="tl"></i><i class="tr"></i><i class="bl"></i><i class="br"></i></div>
 
-					<p class="hero-tag">
-						<span class="zh">把"工程师怎么思考"带进"设计怎么落地"。</span>
-						<span class="en mono uppercase muted-2">Frontend × AI Visual Design</span>
-					</p>
+		<div class="topline">
+			<div>
+				<span>Index № 01</span>
+				<b>{AUTHOR.name} / {AUTHOR.handle}</b>
+			</div>
+			<div>
+				<span>{AUTHOR.role}</span>
+				<b>v1.0 · build {BUILD}</b>
+			</div>
+			<div>
+				<span>{AUTHOR.city} / 远程</span>
+				<b>{AUTHOR.tz} · est. 2026</b>
+			</div>
+		</div>
 
-					<div class="hero-footer mono uppercase">
-						<a href="/blog" class="hero-cta">
-							<span class="muted-3">→ Read</span> <span class="muted-1">Writing</span>
-						</a>
-						<a href="/about" class="hero-cta">
-							<span class="muted-3">→ About</span> <span class="muted-1">AxtonDex</span>
-						</a>
-					</div>
-				</div>
-			</section>
+		<h1 class="display hero-headline">
+			<span class="row">Axton<span class="ordinal">⁰¹</span></span>
+			<span class="row"><span class="light">Dex.</span></span>
+		</h1>
+
+		<div class="botline">
+			<p class="manifesto">
+				{AUTHOR.tagline}<br />
+				<span class="cjk">{AUTHOR.taglineZh}</span>
+			</p>
+			<div class="scroll-cue">
+				<span>scroll · index</span>
+				<span class="arrow"></span>
+			</div>
+		</div>
+	</section>
+
+	<section class="manifesto-block">
+		<div class="col-l">
+			<div>// manifesto</div>
+			<div style="margin-top:6px;color:var(--ink-mid)">№ 01 — 02</div>
+		</div>
+		<div class="col-r">
+			<p>I write at the seam between <b>engineering</b> and <b>visual craft</b> — where bundle sizes meet brush strokes, and where a <i>workflow</i> is the deliverable.</p>
+			<p><span class="cjk">不追新闻、不堆 todo、不做教程。</span> Just notes that should still feel useful six months later.</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<SectionHead
+				n="02"
+				label="Writing"
+				title="Selected"
+				titleDim="notes."
+				countLabel="Total"
+				count={String(posts.length).padStart(2, '0')}
+				countSuffix="posts"
+			/>
 
 			{featured && (
-				<section class="featured">
-					<div class="container">
-						<div class="section-label mono uppercase">
-							<span class="muted-3">N° 01.A</span>
-							<span class="slash muted-4">/</span>
-							<span class="muted-1">Featured</span>
-						</div>
-						<a class="featured-card frame" href={featuredHref}>
-							<Frame />
-							<div class="featured-meta mono uppercase">
-								<span class="muted-2">{featured.data.tag ?? '—'}</span>
-								<span class="muted-4">·</span>
-								<span class="muted-2">
-									<FormattedDate date={featured.data.pubDate} />
-								</span>
-							</div>
-							<h2 class="featured-title">{featured.data.title}</h2>
-							{featured.data.subtitle && (
-								<p class="featured-sub mono uppercase muted-2">{featured.data.subtitle}</p>
-							)}
-							<p class="featured-desc">{featured.data.description}</p>
-							<span class="featured-arrow mono uppercase">
-								<span class="muted-3">Read</span>
-								<span class="muted-1">→</span>
-							</span>
-						</a>
+				<a class="feature" href={`/blog/${featured.id}/`}>
+					<div class="vis">
+						<span class="tag">Featured{featTag ? ` · ${featTag}` : ''}</span>
+						{featured.data.heroImage && (
+							<Image src={featured.data.heroImage} alt="" width={720} height={576} />
+						)}
+						<span class="num">{featNum} / {featDate}</span>
 					</div>
-				</section>
+					<div>
+						<div class="lab">№ 02.1 · Featured</div>
+						<h3>{featured.data.title}</h3>
+						{featured.data.subtitle && <div class="en">{featured.data.subtitle}</div>}
+						<p>{featured.data.description}</p>
+						<span class="more">Read full essay <span>→</span></span>
+					</div>
+				</a>
 			)}
 
-			<section class="stack">
-				<div class="container">
-					<div class="section-label mono uppercase">
-						<span class="muted-3">N° 01.B</span>
-						<span class="slash muted-4">/</span>
-						<span class="muted-1">Stack</span>
-					</div>
-					<div class="stack-grid">
-						{stack.map((group) => (
-							<div class="stack-group">
-								<div class="stack-key mono uppercase muted-3">{group.key}</div>
-								<ul class="stack-items">
-									{group.items.map((item) => (
-										<li>{item}</li>
-									))}
-								</ul>
+			<div class="index-list" style="margin-top:20px">
+				{posts.slice(0, 4).map((p, i) => <PostEntry post={p} index={i} />)}
+			</div>
+
+			<p style="margin-top:40px;text-align:center">
+				<a class="underline view-all" href="/blog/">View all {posts.length} entries →</a>
+			</p>
+		</div>
+	</section>
+
+	<section class="section">
+		<div class="container">
+			<SectionHead
+				n="03"
+				label="Stack"
+				title="Tools,"
+				titleDim="tuned."
+				countLabel="Self-rated"
+				count={stack.reduce((s, c) => s + c.items.length, 0)}
+				countSuffix="tools"
+			/>
+			<div class="stack-grid">
+				{stack.map((col) => (
+					<div class="stack-col">
+						<h4>{col.g}<span class="n">№ 03.{col.n}</span></h4>
+						{col.items.map(([name, lvl]) => (
+							<div class="stack-row">
+								<span class="n">{name}</span>
+								<span class="bar-wrap">
+									<span class="bar">
+										{Array.from({ length: 10 }, (_, k) => (
+											<i class={`seg ${k < Math.round((lvl as number) / 10) ? 'on' : ''}`}></i>
+										))}
+									</span>
+									<span class="pct">{lvl}</span>
+								</span>
 							</div>
 						))}
 					</div>
-				</div>
-			</section>
+				))}
+			</div>
+		</div>
+	</section>
 
-			<section class="now">
-				<div class="container">
-					<div class="section-label mono uppercase">
-						<span class="muted-3">N° 01.C</span>
-						<span class="slash muted-4">/</span>
-						<span class="muted-1">Now</span>
-					</div>
-					<ol class="now-list">
-						{now.map((item, i) => (
-							<li class="now-item">
-								<span class="now-idx mono muted-3">{String(i + 1).padStart(2, '0')}</span>
-								<span class="now-verb mono uppercase muted-2">{item.verb}</span>
-								<span class="now-subject">{item.subject}</span>
+	<section class="section">
+		<div class="container">
+			<SectionHead
+				n="04"
+				label="Now"
+				title="What I'm"
+				titleDim="on, right now."
+				countLabel="Updated"
+				count="05·20"
+				countSuffix="2026"
+			/>
+			<div class="now-grid">
+				<div class="l">
+					<div class="label">// /now movement</div>
+					<p>这一栏每月更新一次，记录目前真正在花时间的三件事。</p>
+					<p class="updated">Last sync — 2026.05.20</p>
+				</div>
+				<div class="r">
+					<ol>
+						{now.map((n) => (
+							<li>
+								<Fragment set:html={n.en} />
+								<br />
+								<span class="cjk">{n.cjk}</span>
 							</li>
 						))}
 					</ol>
 				</div>
-			</section>
-		</main>
-		<Footer />
+			</div>
+		</div>
+	</section>
 
-		<style>
-			.hero {
-				padding: var(--s-9) 0 var(--s-10);
-				border-bottom: 1px solid var(--line);
-				min-height: calc(100vh - 80px);
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-			}
-			.hero .container {
-				width: 100%;
-			}
-			.topline {
-				display: flex;
-				justify-content: space-between;
-				align-items: center;
-				gap: var(--s-5);
-				margin-bottom: var(--s-8);
-				font-size: var(--text-mono);
-			}
-			.topline-item {
-				display: inline-flex;
-				gap: 6px;
-			}
-			.topline-item.right {
-				text-align: right;
-			}
+	<section class="contact">
+		<span class="label" style="display:block">№ 05 · Contact</span>
+		<h2>Say hi. <span class="light">Or just lurk.</span></h2>
+		<div class="links">
+			<a href={`mailto:${AUTHOR.email}`}><span class="glyph">@</span>{AUTHOR.email}</a>
+			<a href={AUTHOR.github} target="_blank" rel="noopener me"><span class="glyph">GH</span>github.com/AxtonCT</a>
+			<a href={AUTHOR.twitter} target="_blank" rel="noopener me"><span class="glyph">TW</span>twitter.com/AxtonCT</a>
+			<a href={AUTHOR.rss}><span class="glyph">RSS</span>rss.xml</a>
+		</div>
+	</section>
 
-			.hero-stack {
-				font-family: var(--font-display);
-				font-weight: 500;
-				line-height: 0.86;
-				letter-spacing: -0.055em;
-				margin: 0;
-				color: var(--fg);
-				display: flex;
-				flex-direction: column;
-			}
-			.hero-stack .line-1 {
-				font-size: var(--display-hero);
-				font-weight: 500;
-				color: var(--fg);
-			}
-			.hero-stack .line-2 {
-				font-size: clamp(48px, 10vw, 156px);
-				font-weight: 300;
-				color: var(--mute-3);
-				margin-top: -0.04em;
-				padding-left: 0.05em;
-			}
-			.hero-stack .period {
-				color: var(--mute-3);
-			}
+</BaseLayout>
 
-			.hero-tag {
-				margin: var(--s-8) 0 0;
-				max-width: 720px;
-				color: var(--fg);
-				font-size: 18px;
-				line-height: 1.5;
-				display: flex;
-				flex-direction: column;
-				gap: 6px;
-			}
-			.hero-tag .zh {
-				color: var(--mute-1);
-			}
-			.hero-tag .en {
-				font-size: var(--text-mono);
-				letter-spacing: 0.08em;
-			}
-			.hero-footer {
-				margin-top: var(--s-7);
-				display: inline-flex;
-				gap: var(--s-7);
-				flex-wrap: wrap;
-				font-size: var(--text-mono);
-			}
-			.hero-cta {
-				color: var(--fg);
-				display: inline-flex;
-				gap: 6px;
-			}
-			.hero-cta:hover {
-				opacity: 0.7;
-			}
+<style>
+	.cjk { font-family: var(--font-prose); font-style: italic; color: var(--ink); }
 
-			.featured,
-			.stack,
-			.now {
-				padding: var(--s-9) 0;
-				border-bottom: 1px solid var(--line);
-			}
-			.section-label {
-				display: inline-flex;
-				gap: 6px;
-				margin-bottom: var(--s-7);
-				font-size: var(--text-mono);
-			}
-			.slash {
-				margin: 0 2px;
-			}
+	.hero {
+		min-height: calc(100vh - 60px);
+		padding: 80px 32px 60px;
+		display: grid;
+		grid-template-rows: auto 1fr auto;
+		gap: 24px;
+		position: relative;
+		overflow: hidden;
+	}
+	.frame-corners > i {
+		position: absolute;
+		width: 18px; height: 18px;
+		border-color: var(--ink-mid);
+		border-style: solid;
+		border-width: 0;
+		pointer-events: none;
+	}
+	.frame-corners .tl { top: 80px; left: 32px; border-top-width: 1px; border-left-width: 1px; }
+	.frame-corners .tr { top: 80px; right: 32px; border-top-width: 1px; border-right-width: 1px; }
+	.frame-corners .bl { bottom: 60px; left: 32px; border-bottom-width: 1px; border-left-width: 1px; }
+	.frame-corners .br { bottom: 60px; right: 32px; border-bottom-width: 1px; border-right-width: 1px; }
 
-			.featured-card {
-				display: block;
-				padding: var(--s-8) var(--s-7);
-				border: 1px solid var(--line);
-				color: var(--fg);
-				transition: border-color 0.2s ease, background 0.2s ease;
-			}
-			.featured-card:hover {
-				border-color: var(--line-strong);
-				background: rgba(250, 250, 250, 0.02);
-			}
-			.featured-meta {
-				display: inline-flex;
-				gap: 8px;
-				margin-bottom: var(--s-4);
-				font-size: var(--text-mono);
-			}
-			.featured-title {
-				font-family: var(--font-display);
-				font-weight: 600;
-				font-size: clamp(36px, 5.4vw, 72px);
-				line-height: 0.95;
-				letter-spacing: -0.04em;
-				margin: 0;
-				color: var(--fg);
-				text-wrap: balance;
-			}
-			.featured-sub {
-				margin: var(--s-3) 0 0;
-				font-size: var(--text-mono);
-				letter-spacing: 0.06em;
-			}
-			.featured-desc {
-				margin: var(--s-5) 0 var(--s-6);
-				max-width: 640px;
-				color: var(--mute-1);
-				font-size: 16px;
-				line-height: 1.65;
-			}
-			.featured-arrow {
-				display: inline-flex;
-				gap: 8px;
-				font-size: var(--text-mono);
-			}
+	.topline {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
+		gap: 24px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		text-transform: uppercase;
+		letter-spacing: .1em;
+	}
+	.topline > div { display: flex; flex-direction: column; gap: 6px; }
+	.topline > div b {
+		color: var(--ink);
+		font-family: var(--font-display);
+		font-size: 13px;
+		letter-spacing: 0;
+		font-weight: 500;
+		text-transform: none;
+	}
+	.topline > div:nth-child(2) { text-align: center; }
+	.topline > div:last-child   { text-align: right; align-items: flex-end; }
 
-			.stack-grid {
-				display: grid;
-				grid-template-columns: repeat(3, 1fr);
-				gap: var(--s-7);
-			}
-			.stack-key {
-				margin-bottom: var(--s-4);
-				font-size: var(--text-mono);
-			}
-			.stack-items {
-				list-style: none;
-				padding: 0;
-				display: flex;
-				flex-direction: column;
-				gap: 4px;
-			}
-			.stack-items li {
-				font-family: var(--font-display);
-				font-weight: 500;
-				font-size: 22px;
-				letter-spacing: -0.015em;
-				color: var(--mute-1);
-				line-height: 1.25;
-			}
+	.hero-headline { align-self: center; }
 
-			.now-list {
-				list-style: none;
-				padding: 0;
-				display: flex;
-				flex-direction: column;
-			}
-			.now-item {
-				display: grid;
-				grid-template-columns: 56px 120px 1fr;
-				gap: var(--s-5);
-				align-items: baseline;
-				padding: var(--s-4) 0;
-				border-bottom: 1px solid var(--line);
-				font-size: 18px;
-			}
-			.now-idx {
-				font-size: var(--text-mono);
-			}
-			.now-verb {
-				font-size: var(--text-mono);
-			}
-			.now-subject {
-				font-family: var(--font-display);
-				font-weight: 500;
-				font-size: 22px;
-				letter-spacing: -0.015em;
-				color: var(--fg);
-				line-height: 1.25;
-			}
+	.botline {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 24px;
+		align-items: end;
+	}
+	.manifesto {
+		max-width: 580px;
+		color: var(--ink-dim);
+		font-size: 18px;
+		line-height: 1.5;
+		text-wrap: pretty;
+	}
+	.manifesto b { color: var(--ink); font-weight: 500; }
+	.scroll-cue {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: .1em;
+		color: var(--ink-mid);
+		text-transform: uppercase;
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 6px;
+	}
+	.scroll-cue .arrow {
+		width: 1px; height: 30px;
+		background: var(--ink-mid);
+		position: relative;
+	}
+	.scroll-cue .arrow::after {
+		content: ""; position: absolute;
+		left: -3px; bottom: 0;
+		width: 7px; height: 7px;
+		border-right: 1px solid var(--ink-mid);
+		border-bottom: 1px solid var(--ink-mid);
+		transform: rotate(45deg) translate(-3px, -3px);
+	}
 
-			@media (max-width: 920px) {
-				.hero {
-					padding: var(--s-7) 0 var(--s-8);
-					min-height: calc(100vh - 60px);
-				}
-				.topline {
-					margin-bottom: var(--s-7);
-				}
-				.hero-tag {
-					margin-top: var(--s-6);
-					font-size: 17px;
-				}
-				.hero-footer {
-					margin-top: var(--s-6);
-					gap: var(--s-5);
-				}
-				.featured,
-				.stack,
-				.now {
-					padding: var(--s-7) 0;
-				}
-				.section-label {
-					margin-bottom: var(--s-5);
-				}
-				.featured-card {
-					padding: var(--s-6) var(--s-5);
-				}
-				.stack-grid {
-					grid-template-columns: 1fr;
-					gap: var(--s-5);
-				}
-				.now-item {
-					grid-template-columns: 36px 90px 1fr;
-				}
-				.now-subject,
-				.stack-items li {
-					font-size: 19px;
-				}
-			}
+	.manifesto-block {
+		padding: 140px 32px;
+		border-top: 1px solid var(--hair);
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 80px;
+		max-width: var(--container);
+		margin: 0 auto;
+	}
+	.manifesto-block .col-l {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .1em;
+		text-transform: uppercase;
+		position: sticky;
+		top: 120px;
+		align-self: start;
+	}
+	.manifesto-block .col-r {
+		font-family: var(--font-display);
+		font-size: clamp(28px, 4.2vw, 56px);
+		line-height: 1.15;
+		letter-spacing: -.018em;
+		color: var(--ink-dim);
+		font-weight: 300;
+		max-width: 980px;
+		text-wrap: balance;
+	}
+	.manifesto-block .col-r b { color: var(--ink); font-weight: 500; }
+	.manifesto-block .col-r p { margin: 0 0 28px; }
+	.manifesto-block .col-r p:last-child { margin-bottom: 0; }
 
-			@media (max-width: 560px) {
-				.hero {
-					padding: var(--s-6) 0 var(--s-7);
-					min-height: calc(100vh - 56px);
-				}
-				.topline {
-					flex-direction: column;
-					align-items: flex-start;
-					gap: 6px;
-					margin-bottom: var(--s-6);
-				}
-				.topline-item.right {
-					text-align: left;
-				}
-				.hero-stack {
-					line-height: 0.88;
-				}
-				.hero-stack .line-1 {
-					font-size: clamp(64px, 22vw, 120px);
-				}
-				.hero-stack .line-2 {
-					font-size: clamp(48px, 16vw, 96px);
-				}
-				.hero-tag {
-					margin-top: var(--s-5);
-					font-size: 16px;
-				}
-				.hero-footer {
-					margin-top: var(--s-5);
-					flex-direction: column;
-					gap: var(--s-3);
-				}
-				.featured,
-				.stack,
-				.now {
-					padding: var(--s-6) 0;
-				}
-				.featured-card {
-					padding: var(--s-5) var(--s-4);
-				}
-				.featured-title {
-					font-size: clamp(28px, 8vw, 44px);
-				}
-				.now-item {
-					grid-template-columns: 28px 1fr;
-					row-gap: 4px;
-				}
-				.now-verb {
-					grid-column: 2;
-				}
-				.now-subject {
-					grid-column: 2;
-					font-size: 17px;
-				}
-				.stack-items li {
-					font-size: 18px;
-				}
-			}
-		</style>
-	</body>
-</html>
+	.stack-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 1px;
+		background: var(--hair);
+		border: 1px solid var(--hair);
+	}
+	.stack-col { background: var(--bg); padding: 32px; }
+	.stack-col h4 {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .12em;
+		text-transform: uppercase;
+		margin: 0 0 24px;
+		font-weight: 500;
+		display: flex;
+		justify-content: space-between;
+	}
+	.stack-col h4 .n { color: var(--muted); }
+	.stack-row {
+		display: grid;
+		grid-template-columns: 1fr auto;
+		gap: 14px;
+		align-items: center;
+		padding: 14px 0;
+		border-bottom: 1px solid var(--hair);
+	}
+	.stack-row:last-child { border-bottom: 0; }
+	.stack-row .n { font-size: 18px; font-weight: 500; letter-spacing: -.01em; }
+	.stack-row .bar-wrap { display: flex; align-items: center; }
+	.stack-row .bar { display: flex; gap: 2px; align-items: center; }
+	.stack-row .bar .seg { width: 6px; height: 14px; background: var(--faint); }
+	.stack-row .bar .seg.on { background: var(--ink); }
+	.stack-row .pct {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		margin-left: 10px;
+		font-variant-numeric: tabular-nums;
+		min-width: 24px;
+		text-align: right;
+	}
+
+	.now-grid {
+		display: grid;
+		grid-template-columns: 200px 1fr;
+		gap: 60px;
+		align-items: start;
+	}
+	.now-grid .l { position: sticky; top: 120px; }
+	.now-grid .l .label { margin-bottom: 14px; display: block; }
+	.now-grid .l p {
+		color: var(--ink-dim);
+		font-size: 13px;
+		line-height: 1.5;
+		margin: 14px 0 0;
+	}
+	.now-grid .l p.updated {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .04em;
+		margin-top: 18px;
+	}
+	.now-grid .r ol { list-style: none; margin: 0; padding: 0; counter-reset: nw; }
+	.now-grid .r li {
+		counter-increment: nw;
+		display: grid;
+		grid-template-columns: 60px 1fr;
+		gap: 24px;
+		padding: 28px 0;
+		border-top: 1px solid var(--hair);
+		font-size: clamp(20px, 2.2vw, 28px);
+		line-height: 1.3;
+		font-weight: 400;
+		letter-spacing: -.01em;
+		color: var(--ink);
+		text-wrap: balance;
+	}
+	.now-grid .r li::before {
+		content: "§ " counter(nw, decimal-leading-zero);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .06em;
+		align-self: center;
+	}
+	.now-grid .r li:last-child { border-bottom: 1px solid var(--hair); }
+	.now-grid .r li b { color: var(--ink); font-weight: 500; }
+
+	.contact {
+		padding: 160px 32px 100px;
+		border-top: 1px solid var(--hair);
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 60px;
+		text-align: center;
+	}
+	.contact h2 {
+		font-size: clamp(48px, 9vw, 140px);
+		line-height: .95;
+		letter-spacing: -.04em;
+		margin: 0;
+		font-weight: 500;
+	}
+	.contact h2 .light { color: var(--ink-dim); font-weight: 300; }
+	.contact .links {
+		display: flex;
+		justify-content: center;
+		gap: 48px;
+		flex-wrap: wrap;
+		font-family: var(--font-mono);
+		font-size: 13px;
+		letter-spacing: .06em;
+		color: var(--ink-mid);
+		text-transform: uppercase;
+	}
+	.contact .links a {
+		color: var(--ink);
+		display: inline-flex;
+		align-items: center;
+		gap: 10px;
+		padding-bottom: 4px;
+		border-bottom: 1px solid var(--muted);
+		transition: border-color .2s;
+	}
+	.contact .links a:hover { border-color: var(--ink); }
+	.contact .links a .glyph { color: var(--ink-mid); }
+
+	.view-all {
+		font-family: var(--font-mono);
+		font-size: 12px;
+		letter-spacing: .1em;
+		text-transform: uppercase;
+		color: var(--ink-mid);
+		padding-bottom: 4px;
+	}
+
+	@media (max-width: 920px) {
+		.hero { padding: 74px 22px 40px; gap: 28px; min-height: calc(100vh - 60px); }
+		.frame-corners .tl, .frame-corners .bl { left: 22px; }
+		.frame-corners .tr, .frame-corners .br { right: 22px; }
+		.frame-corners .tl, .frame-corners .tr { top: 74px; }
+		.frame-corners .bl, .frame-corners .br { bottom: 40px; }
+		.frame-corners > i { width: 14px; height: 14px; }
+		.topline { grid-template-columns: 1fr; gap: 14px; font-size: 10.5px; }
+		.topline > div:nth-child(2), .topline > div:last-child { text-align: left; align-items: flex-start; }
+		.topline > div b { font-size: 13px; }
+		.botline { grid-template-columns: 1fr; gap: 20px; align-items: start; }
+		.manifesto { font-size: 16px; max-width: none; }
+		.scroll-cue { align-items: flex-start; }
+		.scroll-cue .arrow { height: 24px; }
+
+		.manifesto-block { grid-template-columns: 1fr; gap: 24px; padding: 60px 22px; }
+		.manifesto-block .col-l { position: static; }
+		.manifesto-block .col-r { font-size: 24px; line-height: 1.2; }
+
+		.stack-grid { grid-template-columns: 1fr; }
+		.stack-col { padding: 22px; }
+		.stack-row .n { font-size: 16px; }
+		.stack-row .bar .seg { width: 5px; height: 12px; }
+
+		.now-grid { grid-template-columns: 1fr; gap: 24px; }
+		.now-grid .l { position: static; }
+		.now-grid .r li { grid-template-columns: 40px 1fr; gap: 14px; padding: 20px 0; font-size: 18px; }
+
+		.contact { padding: 90px 22px 70px; gap: 36px; }
+		.contact h2 { font-size: clamp(40px, 11vw, 72px); }
+		.contact .links { gap: 18px; font-size: 11.5px; flex-direction: column; align-items: center; }
+	}
+
+	@media (max-width: 560px) {
+		.hero { padding: 70px 18px 32px; }
+		.contact { padding: 70px 18px 60px; }
+	}
+</style>

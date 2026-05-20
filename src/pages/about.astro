@@ -1,275 +1,176 @@
 ---
-import BaseHead from '../components/BaseHead.astro';
-import Footer from '../components/Footer.astro';
-import Header from '../components/Header.astro';
-import SectionHead from '../components/SectionHead.astro';
-import { SITE_TITLE } from '../consts';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, AUTHOR } from '../consts';
 
-const facts = [
-	{ k: 'Role', v: 'Frontend Engineer' },
-	{ k: 'Domain', v: 'Frontend × AI Visual Design' },
-	{ k: 'Writing since', v: '2026' },
-	{ k: 'Frontend', v: 'React · Next · Vue · Nuxt' },
-	{ k: 'AI Visual', v: 'Midjourney · ComfyUI · Stable Diffusion' },
-	{ k: 'Email', v: 'arron_ct@icloud.com' },
-	{ k: 'GitHub', v: '@AxtonCT' },
-	{ k: 'Twitter', v: '@AxtonCT' },
+const now = [
+	{ en: 'Deep-diving <b>ComfyUI</b> workflow — graph thinking vs prompt engineering.', cjk: '节点图思维 vs prompt 工程' },
+	{ en: 'Reading on <b>diffusion fundamentals</b> — from DDPM to flow matching.', cjk: 'DDPM → Flow Matching' },
+	{ en: "Building a small tool that feeds <b>Figma frames</b> to SD for variations.", cjk: 'Figma → SD 变体小工具' },
 ];
-
-const subtitle = '一个前端工程师，正在把工作流延伸到 AI 视觉设计。';
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<BaseHead title={`About — ${SITE_TITLE}`} description="关于 AxtonDex" />
-	</head>
-	<body>
-		<Header />
-		<main>
-			<div class="container">
-				<SectionHead
-					index="03"
-					kicker="About"
-					title="About."
-					subtitle={subtitle}
-				/>
+<BaseLayout title={`About · ${SITE_TITLE}`} description={`About ${AUTHOR.name} — ${AUTHOR.role}`}>
 
-				<div class="about-grid">
-					<aside class="facts">
-						<div class="facts-title mono uppercase muted-3">Quick facts</div>
-						<dl class="facts-list">
-							{facts.map((f) => (
-								<>
-									<dt class="mono uppercase muted-3">{f.k}</dt>
-									<dd class="mono">{f.v}</dd>
-								</>
-							))}
-						</dl>
-					</aside>
+	<section class="pagehead">
+		<div class="container">
+			<div class="crumbs">№ 03 <span class="arr">/</span> <b>About</b></div>
+			<h1>About.</h1>
+			<p class="sub">
+				A frontend engineer, learning to draw with weights and graphs.
+				<span class="cjk">把工作流延伸到 AI 视觉设计。</span>
+			</p>
+		</div>
+	</section>
 
-					<article class="copy">
-						<div class="block">
-							<h2 class="block-title display">背景</h2>
-							<p>
-								React / Next.js 与 Vue / Nuxt 是日常；Midjourney、ComfyUI、Stable Diffusion 是业余时间想搞清楚的事。
-							</p>
-							<p>
-								这里是这条路上沉淀下来的笔记 — 不追新闻、不堆 todo、不做教程，只写过半年回头看仍然觉得有用的东西。
-							</p>
-						</div>
+	<section class="about-body">
+		<aside>
+			<h5>// quick facts</h5>
+			<ul>
+				<li><b>NAME</b>{AUTHOR.name}</li>
+				<li><b>HANDLE</b>{AUTHOR.handle}</li>
+				<li><b>BASED</b>{AUTHOR.city}</li>
+				<li><b>TZ</b>{AUTHOR.tz}</li>
+				<li><b>ROLE</b>Frontend × Visual</li>
+				<li><b>EST</b>2026</li>
+			</ul>
+			<h5>// channels</h5>
+			<ul>
+				<li><b>EMAIL</b>{AUTHOR.email}</li>
+				<li><b>GITHUB</b>/AxtonCT</li>
+				<li><b>TWITTER</b>@AxtonCT</li>
+				<li><b>RSS</b>/rss.xml</li>
+			</ul>
+		</aside>
 
-						<div class="block">
-							<h2 class="block-title display">Now</h2>
-							<p class="muted-1 small">
-								目前正在专注的事情，不定期更新（启发自 <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now movement</a>）。
-							</p>
-							<ol class="now-list">
-								<li>
-									<span class="now-idx mono muted-3">01</span>
-									<span class="now-verb mono uppercase muted-2">深入</span>
-									<span class="now-subject">___（例：ComfyUI workflow / SD 模型微调）</span>
-								</li>
-								<li>
-									<span class="now-idx mono muted-3">02</span>
-									<span class="now-verb mono uppercase muted-2">在啃</span>
-									<span class="now-subject">___（例：论文 / 工程实践）</span>
-								</li>
-								<li>
-									<span class="now-idx mono muted-3">03</span>
-									<span class="now-verb mono uppercase muted-2">在做</span>
-									<span class="now-subject">___（例：一个具体项目 / 一个实验）</span>
-								</li>
-							</ol>
-						</div>
+		<article>
+			<p>一个前端工程师，正在把工作流延伸到 AI 视觉设计。</p>
+			<p><code>React</code> / <code>Next.js</code> 与 <code>Vue</code> / <code>Nuxt</code> 是日常；<code>Midjourney</code>、<code>ComfyUI</code>、<code>Stable Diffusion</code> 是业余时间想搞清楚的事。</p>
+			<p>这里是这条路上沉淀下来的笔记 — <b>不追新闻、不堆 todo、不做教程</b>，只写过半年回头看仍然觉得有用的东西。</p>
 
-						<div class="block">
-							<h2 class="block-title display">Contact</h2>
-							<ul class="links">
-								<li>
-									<a href="https://twitter.com/AxtonCT" target="_blank" rel="me noopener">
-										<span class="mono uppercase muted-3">Twitter</span>
-										<span class="mono">@AxtonCT</span>
-										<span class="mono muted-3">→</span>
-									</a>
-								</li>
-								<li>
-									<a href="https://github.com/AxtonCT" target="_blank" rel="me noopener">
-										<span class="mono uppercase muted-3">GitHub</span>
-										<span class="mono">@AxtonCT</span>
-										<span class="mono muted-3">→</span>
-									</a>
-								</li>
-								<li>
-									<a href="mailto:arron_ct@icloud.com">
-										<span class="mono uppercase muted-3">Email</span>
-										<span class="mono">arron_ct@icloud.com</span>
-										<span class="mono muted-3">→</span>
-									</a>
-								</li>
-							</ul>
-						</div>
-					</article>
-				</div>
-			</div>
-		</main>
-		<Footer />
+			<h2>Now</h2>
+			<p>目前正在专注的事情，不定期更新（启发自 <a class="underline" href="https://nownownow.com/about" target="_blank" rel="noopener">/now movement</a>）：</p>
+			<ul>
+				{now.map((n) => (
+					<li><Fragment set:html={n.en} /></li>
+				))}
+			</ul>
 
-		<style>
-			main {
-				padding-bottom: var(--s-9);
-			}
-			.about-grid {
-				display: grid;
-				grid-template-columns: 260px 1fr;
-				gap: var(--s-9);
-				padding: var(--s-9) 0;
-			}
-			.facts {
-				position: sticky;
-				top: var(--s-6);
-				align-self: start;
-			}
-			.facts-title {
-				margin-bottom: var(--s-4);
-				padding-bottom: var(--s-3);
-				border-bottom: 1px solid var(--line);
-				font-size: var(--text-mono);
-			}
-			.facts-list {
-				margin: 0;
-				display: grid;
-				grid-template-columns: max-content 1fr;
-				gap: 8px var(--s-4);
-			}
-			.facts-list dt {
-				font-size: var(--text-mono-sm);
-				padding-top: 2px;
-			}
-			.facts-list dd {
-				margin: 0;
-				font-size: var(--text-mono);
-				color: var(--mute-1);
-			}
+			<h2>Reach</h2>
+			<p>邮件最稳：<code>{AUTHOR.email}</code>。其他渠道在左侧 — 我看到都会回，只是不一定快。</p>
 
-			.copy {
-				max-width: 640px;
-			}
-			.block + .block {
-				margin-top: var(--s-9);
-			}
-			.block-title {
-				font-family: var(--font-display);
-				font-weight: 500;
-				font-size: clamp(28px, 3vw, 40px);
-				letter-spacing: -0.035em;
-				margin-bottom: var(--s-4);
-				color: var(--fg);
-			}
-			.copy p {
-				margin: 0 0 1em;
-				font-size: 18px;
-				line-height: 1.65;
-				color: var(--mute-1);
-			}
-			.copy p.small {
-				font-size: 15px;
-			}
-			.copy a {
-				color: var(--fg);
-				border-bottom: 1px solid var(--mute-3);
-			}
-			.copy a:hover {
-				border-bottom-color: var(--fg);
-			}
+			<h2>Colophon</h2>
+			<p>这个站用 <code>Astro</code> + 静态 markdown 构建，部署在 <code>GitHub Pages</code>。字体是 <b>Bricolage Grotesque</b>（display）+ <b>Atkinson Hyperlegible</b>（prose）+ <b>JetBrains Mono</b>（metadata）。色板：单一灰阶。</p>
 
-			.now-list {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			.now-list li {
-				display: grid;
-				grid-template-columns: 32px 80px 1fr;
-				gap: var(--s-3);
-				align-items: baseline;
-				padding: var(--s-3) 0;
-				border-bottom: 1px solid var(--line);
-				font-family: var(--font-sans);
-			}
-			.now-idx { font-size: var(--text-mono); }
-			.now-verb { font-size: var(--text-mono); }
-			.now-subject {
-				font-family: var(--font-display);
-				font-weight: 500;
-				font-size: 18px;
-				color: var(--fg);
-			}
+			<h2>What this isn't</h2>
+			<p>不是教程站。不是新闻站。不是 AI 速通站。这里只是一个工程师的思考留痕。</p>
+		</article>
+	</section>
 
-			.links {
-				list-style: none;
-				margin: 0;
-				padding: 0;
-			}
-			.links li {
-				padding: 0;
-				border-bottom: 1px solid var(--line);
-			}
-			.links li a {
-				display: grid;
-				grid-template-columns: 100px 1fr auto;
-				gap: var(--s-3);
-				align-items: baseline;
-				padding: var(--s-4) 0;
-				font-size: var(--text-mono);
-				border-bottom: none !important;
-				color: var(--fg);
-				transition: background 0.15s ease;
-			}
-			.links li a:hover {
-				background: rgba(250, 250, 250, 0.02);
-			}
+</BaseLayout>
 
-			@media (max-width: 920px) {
-				.about-grid {
-					grid-template-columns: 220px 1fr;
-					gap: var(--s-7);
-					padding: var(--s-7) 0;
-				}
-			}
+<style>
+	.cjk { font-family: var(--font-prose); font-style: italic; color: var(--ink); }
 
-			@media (max-width: 560px) {
-				.about-grid {
-					grid-template-columns: 1fr;
-					gap: var(--s-6);
-					padding: var(--s-6) 0;
-				}
-				.facts {
-					position: static;
-				}
-				.facts-list {
-					gap: 4px var(--s-3);
-				}
-				.block + .block {
-					margin-top: var(--s-7);
-				}
-				.copy p {
-					font-size: 16px;
-				}
-				.now-list li {
-					grid-template-columns: 28px 1fr;
-					row-gap: 2px;
-				}
-				.now-verb {
-					grid-column: 2;
-				}
-				.now-subject {
-					grid-column: 2;
-				}
-				.links li a {
-					grid-template-columns: 80px 1fr auto;
-				}
-			}
-		</style>
-	</body>
-</html>
+	.about-body {
+		max-width: var(--container);
+		margin: 0 auto;
+		padding: 60px 32px 120px;
+		display: grid;
+		grid-template-columns: 280px 1fr;
+		gap: 80px;
+		align-items: start;
+	}
+	aside {
+		position: sticky;
+		top: 120px;
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .04em;
+	}
+	aside h5 {
+		font-size: 10px;
+		color: var(--ink-mid);
+		letter-spacing: .14em;
+		text-transform: uppercase;
+		margin: 0 0 12px;
+		font-weight: 400;
+		font-family: var(--font-mono);
+	}
+	aside ul { list-style: none; margin: 0 0 28px; padding: 0; }
+	aside li {
+		padding: 5px 0;
+		color: var(--ink);
+		font-size: 12px;
+		font-family: var(--font-mono);
+		letter-spacing: .02em;
+	}
+	aside li b {
+		color: var(--ink-mid);
+		font-weight: 400;
+		margin-right: 8px;
+		font-size: 10px;
+	}
+
+	article {
+		font-family: var(--font-prose);
+		font-size: 18px;
+		line-height: 1.75;
+		color: var(--ink-dim);
+		max-width: 680px;
+		text-wrap: pretty;
+	}
+	article > p:first-child {
+		font-family: var(--font-display);
+		font-size: 26px;
+		line-height: 1.35;
+		color: var(--ink);
+		font-weight: 400;
+		letter-spacing: -.015em;
+		margin: 0 0 36px;
+		text-wrap: balance;
+	}
+	article p { margin: 0 0 22px; }
+	article b, article strong { color: var(--ink); font-weight: 700; }
+	article code {
+		font-family: var(--font-mono);
+		font-size: .86em;
+		background: var(--bg-card);
+		border: 1px solid var(--hair);
+		padding: 1px 7px;
+		color: var(--ink);
+	}
+	article h2 {
+		font-family: var(--font-mono);
+		font-size: 13px;
+		color: var(--ink-mid);
+		letter-spacing: .14em;
+		text-transform: uppercase;
+		margin: 50px 0 18px;
+		font-weight: 500;
+	}
+	article h2::before { content: "— "; color: var(--ink-mid); }
+	article ul {
+		padding-left: 0;
+		list-style: none;
+		margin: 0 0 22px;
+	}
+	article li {
+		padding: 10px 0;
+		border-top: 1px solid var(--hair);
+		color: var(--ink);
+		font-family: var(--font-prose);
+		font-size: 16px;
+		line-height: 1.5;
+	}
+	article li:last-child { border-bottom: 1px solid var(--hair); }
+
+	@media (max-width: 920px) {
+		.about-body { grid-template-columns: 1fr; gap: 24px; padding: 40px 22px 80px; }
+		aside { position: static; }
+		article { font-size: 16px; max-width: none; }
+		article > p:first-child { font-size: 22px; margin-bottom: 28px; }
+		article h2 { margin: 36px 0 12px; }
+		article li { font-size: 15px; }
+	}
+</style>
