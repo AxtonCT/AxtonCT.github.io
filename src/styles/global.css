@@ -171,30 +171,41 @@ blockquote {
 	padding: 0 var(--gutter);
 }
 
-/* Page-level frame corners */
+/* Page-level frame corners (registration marks at 4 corners) */
 .frame {
 	position: relative;
 }
-.frame::before,
-.frame::after {
-	content: '';
+.frame > .frame-corner {
 	position: absolute;
-	width: 24px;
-	height: 24px;
+	width: 28px;
+	height: 28px;
 	border: 1px solid var(--mute-3);
 	pointer-events: none;
+	z-index: 1;
 }
-.frame::before {
-	top: 0;
-	left: 0;
+.frame > .frame-corner.tl {
+	top: -1px;
+	left: -1px;
 	border-right: none;
 	border-bottom: none;
 }
-.frame::after {
-	top: 0;
-	right: 0;
+.frame > .frame-corner.tr {
+	top: -1px;
+	right: -1px;
 	border-left: none;
 	border-bottom: none;
+}
+.frame > .frame-corner.bl {
+	bottom: -1px;
+	left: -1px;
+	border-right: none;
+	border-top: none;
+}
+.frame > .frame-corner.br {
+	bottom: -1px;
+	right: -1px;
+	border-left: none;
+	border-top: none;
 }
 
 /* Prose styling for blog post body */
@@ -306,10 +317,9 @@ blockquote {
 	.hide-sm {
 		display: none !important;
 	}
-	.frame::before,
-	.frame::after {
-		width: 16px;
-		height: 16px;
+	.frame > .frame-corner {
+		width: 18px;
+		height: 18px;
 	}
 	.prose {
 		font-size: 16px;

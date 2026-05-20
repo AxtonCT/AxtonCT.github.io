@@ -1,4 +1,6 @@
 ---
+import Frame from './Frame.astro';
+
 interface Props {
 	index: string;
 	kicker: string;
@@ -11,6 +13,7 @@ const { index, kicker, title, subtitle, meta = [] } = Astro.props;
 ---
 
 <section class="section-head frame">
+	<Frame />
 	<div class="kicker mono uppercase">
 		<span class="muted-3">N°</span>
 		<span class="muted-1">{index}</span>
@@ -48,10 +51,10 @@ const { index, kicker, title, subtitle, meta = [] } = Astro.props;
 	}
 	.display-title {
 		font-family: var(--font-display);
-		font-weight: 700;
+		font-weight: 500;
 		font-size: var(--display-2);
-		letter-spacing: -0.045em;
-		line-height: 0.92;
+		letter-spacing: -0.05em;
+		line-height: 0.88;
 		margin: 0;
 		color: var(--fg);
 	}
@@ -61,6 +64,10 @@ const { index, kicker, title, subtitle, meta = [] } = Astro.props;
 		color: var(--mute-1);
 		font-size: 17px;
 		line-height: 1.6;
+	}
+	.subtitle :global(em) {
+		font-style: italic;
+		color: var(--mute-2);
 	}
 	.meta-row {
 		display: flex;

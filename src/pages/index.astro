@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
+import Frame from '../components/Frame.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
@@ -34,6 +35,7 @@ const now = [
 		<Header />
 		<main>
 			<section class="hero frame">
+				<Frame />
 				<div class="container">
 					<div class="topline">
 						<span class="topline-item mono uppercase">
@@ -50,11 +52,14 @@ const now = [
 						</span>
 					</div>
 
-					<h1 class="hero-title display">AxtonDex<span class="period">.</span></h1>
+					<h1 class="hero-stack" aria-label="AxtonDex">
+						<span class="line-1">Axton</span>
+						<span class="line-2">Dex<span class="period">.</span></span>
+					</h1>
 
 					<p class="hero-tag">
 						<span class="zh">把"工程师怎么思考"带进"设计怎么落地"。</span>
-						<span class="en mono uppercase">Frontend × AI Visual Design</span>
+						<span class="en mono uppercase muted-2">Frontend × AI Visual Design</span>
 					</p>
 
 					<div class="hero-footer mono uppercase">
@@ -76,7 +81,8 @@ const now = [
 							<span class="slash muted-4">/</span>
 							<span class="muted-1">Featured</span>
 						</div>
-						<a class="featured-card" href={featuredHref}>
+						<a class="featured-card frame" href={featuredHref}>
+							<Frame />
 							<div class="featured-meta mono uppercase">
 								<span class="muted-2">{featured.data.tag ?? '—'}</span>
 								<span class="muted-4">·</span>
@@ -84,12 +90,15 @@ const now = [
 									<FormattedDate date={featured.data.pubDate} />
 								</span>
 							</div>
-							<h2 class="featured-title display">{featured.data.title}</h2>
+							<h2 class="featured-title">{featured.data.title}</h2>
 							{featured.data.subtitle && (
 								<p class="featured-sub mono uppercase muted-2">{featured.data.subtitle}</p>
 							)}
 							<p class="featured-desc">{featured.data.description}</p>
-							<span class="featured-arrow mono uppercase muted-1">Read →</span>
+							<span class="featured-arrow mono uppercase">
+								<span class="muted-3">Read</span>
+								<span class="muted-1">→</span>
+							</span>
 						</a>
 					</div>
 				</section>
@@ -142,13 +151,21 @@ const now = [
 			.hero {
 				padding: var(--s-9) 0 var(--s-10);
 				border-bottom: 1px solid var(--line);
+				min-height: calc(100vh - 80px);
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			.hero .container {
+				width: 100%;
 			}
 			.topline {
 				display: flex;
 				justify-content: space-between;
 				align-items: center;
 				gap: var(--s-5);
-				margin-bottom: var(--s-9);
+				margin-bottom: var(--s-8);
+				font-size: var(--text-mono);
 			}
 			.topline-item {
 				display: inline-flex;
@@ -157,46 +174,61 @@ const now = [
 			.topline-item.right {
 				text-align: right;
 			}
-			.hero-title {
+
+			.hero-stack {
 				font-family: var(--font-display);
-				font-weight: 800;
-				font-size: var(--display-hero);
-				line-height: 0.9;
-				letter-spacing: -0.06em;
+				font-weight: 500;
+				line-height: 0.86;
+				letter-spacing: -0.055em;
 				margin: 0;
 				color: var(--fg);
-			}
-			.hero-title .period {
-				color: var(--mute-3);
-			}
-			.hero-tag {
-				margin: var(--s-7) 0 0;
-				max-width: 720px;
-				color: var(--fg);
-				font-size: 20px;
-				line-height: 1.45;
 				display: flex;
 				flex-direction: column;
-				gap: 8px;
 			}
-			.hero-tag .zh {
+			.hero-stack .line-1 {
+				font-size: var(--display-hero);
+				font-weight: 500;
 				color: var(--fg);
 			}
+			.hero-stack .line-2 {
+				font-size: clamp(48px, 10vw, 156px);
+				font-weight: 300;
+				color: var(--mute-3);
+				margin-top: -0.04em;
+				padding-left: 0.05em;
+			}
+			.hero-stack .period {
+				color: var(--mute-3);
+			}
+
+			.hero-tag {
+				margin: var(--s-8) 0 0;
+				max-width: 720px;
+				color: var(--fg);
+				font-size: 18px;
+				line-height: 1.5;
+				display: flex;
+				flex-direction: column;
+				gap: 6px;
+			}
+			.hero-tag .zh {
+				color: var(--mute-1);
+			}
 			.hero-tag .en {
-				color: var(--mute-2);
 				font-size: var(--text-mono);
+				letter-spacing: 0.08em;
 			}
 			.hero-footer {
-				margin-top: var(--s-9);
+				margin-top: var(--s-7);
 				display: inline-flex;
 				gap: var(--s-7);
 				flex-wrap: wrap;
+				font-size: var(--text-mono);
 			}
 			.hero-cta {
 				color: var(--fg);
 				display: inline-flex;
-				gap: 4px;
-				font-size: var(--text-mono);
+				gap: 6px;
 			}
 			.hero-cta:hover {
 				opacity: 0.7;
@@ -212,6 +244,7 @@ const now = [
 				display: inline-flex;
 				gap: 6px;
 				margin-bottom: var(--s-7);
+				font-size: var(--text-mono);
 			}
 			.slash {
 				margin: 0 2px;
@@ -219,7 +252,7 @@ const now = [
 
 			.featured-card {
 				display: block;
-				padding: var(--s-7);
+				padding: var(--s-8) var(--s-7);
 				border: 1px solid var(--line);
 				color: var(--fg);
 				transition: border-color 0.2s ease, background 0.2s ease;
@@ -236,9 +269,9 @@ const now = [
 			}
 			.featured-title {
 				font-family: var(--font-display);
-				font-weight: 700;
-				font-size: clamp(36px, 5vw, 64px);
-				line-height: 1;
+				font-weight: 600;
+				font-size: clamp(36px, 5.4vw, 72px);
+				line-height: 0.95;
 				letter-spacing: -0.04em;
 				margin: 0;
 				color: var(--fg);
@@ -247,16 +280,18 @@ const now = [
 			.featured-sub {
 				margin: var(--s-3) 0 0;
 				font-size: var(--text-mono);
+				letter-spacing: 0.06em;
 			}
 			.featured-desc {
 				margin: var(--s-5) 0 var(--s-6);
 				max-width: 640px;
 				color: var(--mute-1);
 				font-size: 16px;
-				line-height: 1.6;
+				line-height: 1.65;
 			}
 			.featured-arrow {
-				display: inline-block;
+				display: inline-flex;
+				gap: 8px;
 				font-size: var(--text-mono);
 			}
 
@@ -280,8 +315,9 @@ const now = [
 				font-family: var(--font-display);
 				font-weight: 500;
 				font-size: 22px;
-				letter-spacing: -0.01em;
+				letter-spacing: -0.015em;
 				color: var(--mute-1);
+				line-height: 1.25;
 			}
 
 			.now-list {
@@ -292,8 +328,8 @@ const now = [
 			}
 			.now-item {
 				display: grid;
-				grid-template-columns: 40px 100px 1fr;
-				gap: var(--s-4);
+				grid-template-columns: 56px 120px 1fr;
+				gap: var(--s-5);
 				align-items: baseline;
 				padding: var(--s-4) 0;
 				border-bottom: 1px solid var(--line);
@@ -309,23 +345,25 @@ const now = [
 				font-family: var(--font-display);
 				font-weight: 500;
 				font-size: 22px;
-				letter-spacing: -0.01em;
+				letter-spacing: -0.015em;
 				color: var(--fg);
+				line-height: 1.25;
 			}
 
 			@media (max-width: 920px) {
 				.hero {
 					padding: var(--s-7) 0 var(--s-8);
+					min-height: calc(100vh - 60px);
 				}
 				.topline {
 					margin-bottom: var(--s-7);
 				}
 				.hero-tag {
 					margin-top: var(--s-6);
-					font-size: 18px;
+					font-size: 17px;
 				}
 				.hero-footer {
-					margin-top: var(--s-7);
+					margin-top: var(--s-6);
 					gap: var(--s-5);
 				}
 				.featured,
@@ -337,14 +375,14 @@ const now = [
 					margin-bottom: var(--s-5);
 				}
 				.featured-card {
-					padding: var(--s-5);
+					padding: var(--s-6) var(--s-5);
 				}
 				.stack-grid {
 					grid-template-columns: 1fr;
 					gap: var(--s-5);
 				}
 				.now-item {
-					grid-template-columns: 32px 80px 1fr;
+					grid-template-columns: 36px 90px 1fr;
 				}
 				.now-subject,
 				.stack-items li {
@@ -355,23 +393,32 @@ const now = [
 			@media (max-width: 560px) {
 				.hero {
 					padding: var(--s-6) 0 var(--s-7);
+					min-height: calc(100vh - 56px);
 				}
 				.topline {
 					flex-direction: column;
 					align-items: flex-start;
-					gap: 8px;
+					gap: 6px;
+					margin-bottom: var(--s-6);
 				}
 				.topline-item.right {
 					text-align: left;
 				}
-				.hero-title {
-					font-size: clamp(56px, 22vw, 110px);
+				.hero-stack {
+					line-height: 0.88;
+				}
+				.hero-stack .line-1 {
+					font-size: clamp(64px, 22vw, 120px);
+				}
+				.hero-stack .line-2 {
+					font-size: clamp(48px, 16vw, 96px);
 				}
 				.hero-tag {
-					font-size: 17px;
+					margin-top: var(--s-5);
+					font-size: 16px;
 				}
 				.hero-footer {
-					margin-top: var(--s-6);
+					margin-top: var(--s-5);
 					flex-direction: column;
 					gap: var(--s-3);
 				}
@@ -380,8 +427,11 @@ const now = [
 				.now {
 					padding: var(--s-6) 0;
 				}
+				.featured-card {
+					padding: var(--s-5) var(--s-4);
+				}
 				.featured-title {
-					font-size: clamp(32px, 8vw, 48px);
+					font-size: clamp(28px, 8vw, 44px);
 				}
 				.now-item {
 					grid-template-columns: 28px 1fr;
