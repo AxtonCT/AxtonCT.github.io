@@ -1,31 +1,275 @@
 ---
-import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
-import Layout from '../layouts/BlogPost.astro';
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import SectionHead from '../components/SectionHead.astro';
+import { SITE_TITLE } from '../consts';
+
+const facts = [
+	{ k: 'Role', v: 'Frontend Engineer' },
+	{ k: 'Domain', v: 'Frontend × AI Visual Design' },
+	{ k: 'Writing since', v: '2026' },
+	{ k: 'Frontend', v: 'React · Next · Vue · Nuxt' },
+	{ k: 'AI Visual', v: 'Midjourney · ComfyUI · Stable Diffusion' },
+	{ k: 'Email', v: 'arron_ct@icloud.com' },
+	{ k: 'GitHub', v: '@AxtonCT' },
+	{ k: 'Twitter', v: '@AxtonCT' },
+];
+
+const subtitle = '一个前端工程师，正在把工作流延伸到 AI 视觉设计。';
 ---
 
-<Layout
-	title="About"
-	description="关于 AxtonDex — 前端工程师，正在探索 AI 视觉设计"
-	pubDate={new Date('2026-05-20')}
-	heroImage={AboutHeroImage}
->
-	<p>
-		一个前端工程师，正在把工作流延伸到 AI 视觉设计。
-	</p>
-	<p>
-		React / Next.js 与 Vue / Nuxt 是日常；Midjourney、ComfyUI、Stable Diffusion 是业余时间想搞清楚的事。
-	</p>
-	<p>
-		这里是这条路上沉淀下来的笔记 — 不追新闻、不堆 todo、不做教程，只写过半年回头看仍然觉得有用的东西。
-	</p>
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`About — ${SITE_TITLE}`} description="关于 AxtonDex" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="container">
+				<SectionHead
+					index="03"
+					kicker="About"
+					title="About."
+					subtitle={subtitle}
+				/>
 
-	<h2>Now</h2>
-	<p>
-		目前正在专注的事情，不定期更新（启发自 <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now movement</a>）：
-	</p>
-	<ul>
-		<li>在深入 ___（例：ComfyUI workflow / SD 模型微调）</li>
-		<li>在啃 ___（例：论文 / 工程实践）</li>
-		<li>在做 ___（例：一个具体项目 / 一个实验）</li>
-	</ul>
-</Layout>
+				<div class="about-grid">
+					<aside class="facts">
+						<div class="facts-title mono uppercase muted-3">Quick facts</div>
+						<dl class="facts-list">
+							{facts.map((f) => (
+								<>
+									<dt class="mono uppercase muted-3">{f.k}</dt>
+									<dd class="mono">{f.v}</dd>
+								</>
+							))}
+						</dl>
+					</aside>
+
+					<article class="copy">
+						<div class="block">
+							<h2 class="block-title display">背景</h2>
+							<p>
+								React / Next.js 与 Vue / Nuxt 是日常；Midjourney、ComfyUI、Stable Diffusion 是业余时间想搞清楚的事。
+							</p>
+							<p>
+								这里是这条路上沉淀下来的笔记 — 不追新闻、不堆 todo、不做教程，只写过半年回头看仍然觉得有用的东西。
+							</p>
+						</div>
+
+						<div class="block">
+							<h2 class="block-title display">Now</h2>
+							<p class="muted-1 small">
+								目前正在专注的事情，不定期更新（启发自 <a href="https://nownownow.com/about" target="_blank" rel="noopener">/now movement</a>）。
+							</p>
+							<ol class="now-list">
+								<li>
+									<span class="now-idx mono muted-3">01</span>
+									<span class="now-verb mono uppercase muted-2">深入</span>
+									<span class="now-subject">___（例：ComfyUI workflow / SD 模型微调）</span>
+								</li>
+								<li>
+									<span class="now-idx mono muted-3">02</span>
+									<span class="now-verb mono uppercase muted-2">在啃</span>
+									<span class="now-subject">___（例：论文 / 工程实践）</span>
+								</li>
+								<li>
+									<span class="now-idx mono muted-3">03</span>
+									<span class="now-verb mono uppercase muted-2">在做</span>
+									<span class="now-subject">___（例：一个具体项目 / 一个实验）</span>
+								</li>
+							</ol>
+						</div>
+
+						<div class="block">
+							<h2 class="block-title display">Contact</h2>
+							<ul class="links">
+								<li>
+									<a href="https://twitter.com/AxtonCT" target="_blank" rel="me noopener">
+										<span class="mono uppercase muted-3">Twitter</span>
+										<span class="mono">@AxtonCT</span>
+										<span class="mono muted-3">→</span>
+									</a>
+								</li>
+								<li>
+									<a href="https://github.com/AxtonCT" target="_blank" rel="me noopener">
+										<span class="mono uppercase muted-3">GitHub</span>
+										<span class="mono">@AxtonCT</span>
+										<span class="mono muted-3">→</span>
+									</a>
+								</li>
+								<li>
+									<a href="mailto:arron_ct@icloud.com">
+										<span class="mono uppercase muted-3">Email</span>
+										<span class="mono">arron_ct@icloud.com</span>
+										<span class="mono muted-3">→</span>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</article>
+				</div>
+			</div>
+		</main>
+		<Footer />
+
+		<style>
+			main {
+				padding-bottom: var(--s-9);
+			}
+			.about-grid {
+				display: grid;
+				grid-template-columns: 260px 1fr;
+				gap: var(--s-9);
+				padding: var(--s-9) 0;
+			}
+			.facts {
+				position: sticky;
+				top: var(--s-6);
+				align-self: start;
+			}
+			.facts-title {
+				margin-bottom: var(--s-4);
+				padding-bottom: var(--s-3);
+				border-bottom: 1px solid var(--line);
+				font-size: var(--text-mono);
+			}
+			.facts-list {
+				margin: 0;
+				display: grid;
+				grid-template-columns: max-content 1fr;
+				gap: 8px var(--s-4);
+			}
+			.facts-list dt {
+				font-size: var(--text-mono-sm);
+				padding-top: 2px;
+			}
+			.facts-list dd {
+				margin: 0;
+				font-size: var(--text-mono);
+				color: var(--mute-1);
+			}
+
+			.copy {
+				max-width: 640px;
+			}
+			.block + .block {
+				margin-top: var(--s-9);
+			}
+			.block-title {
+				font-family: var(--font-display);
+				font-weight: 600;
+				font-size: clamp(28px, 3vw, 40px);
+				letter-spacing: -0.03em;
+				margin-bottom: var(--s-4);
+				color: var(--fg);
+			}
+			.copy p {
+				margin: 0 0 1em;
+				font-size: 18px;
+				line-height: 1.65;
+				color: var(--mute-1);
+			}
+			.copy p.small {
+				font-size: 15px;
+			}
+			.copy a {
+				color: var(--fg);
+				border-bottom: 1px solid var(--mute-3);
+			}
+			.copy a:hover {
+				border-bottom-color: var(--fg);
+			}
+
+			.now-list {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.now-list li {
+				display: grid;
+				grid-template-columns: 32px 80px 1fr;
+				gap: var(--s-3);
+				align-items: baseline;
+				padding: var(--s-3) 0;
+				border-bottom: 1px solid var(--line);
+				font-family: var(--font-sans);
+			}
+			.now-idx { font-size: var(--text-mono); }
+			.now-verb { font-size: var(--text-mono); }
+			.now-subject {
+				font-family: var(--font-display);
+				font-weight: 500;
+				font-size: 18px;
+				color: var(--fg);
+			}
+
+			.links {
+				list-style: none;
+				margin: 0;
+				padding: 0;
+			}
+			.links li {
+				padding: 0;
+				border-bottom: 1px solid var(--line);
+			}
+			.links li a {
+				display: grid;
+				grid-template-columns: 100px 1fr auto;
+				gap: var(--s-3);
+				align-items: baseline;
+				padding: var(--s-4) 0;
+				font-size: var(--text-mono);
+				border-bottom: none !important;
+				color: var(--fg);
+				transition: background 0.15s ease;
+			}
+			.links li a:hover {
+				background: rgba(250, 250, 250, 0.02);
+			}
+
+			@media (max-width: 920px) {
+				.about-grid {
+					grid-template-columns: 220px 1fr;
+					gap: var(--s-7);
+					padding: var(--s-7) 0;
+				}
+			}
+
+			@media (max-width: 560px) {
+				.about-grid {
+					grid-template-columns: 1fr;
+					gap: var(--s-6);
+					padding: var(--s-6) 0;
+				}
+				.facts {
+					position: static;
+				}
+				.facts-list {
+					gap: 4px var(--s-3);
+				}
+				.block + .block {
+					margin-top: var(--s-7);
+				}
+				.copy p {
+					font-size: 16px;
+				}
+				.now-list li {
+					grid-template-columns: 28px 1fr;
+					row-gap: 2px;
+				}
+				.now-verb {
+					grid-column: 2;
+				}
+				.now-subject {
+					grid-column: 2;
+				}
+				.links li a {
+					grid-template-columns: 80px 1fr auto;
+				}
+			}
+		</style>
+	</body>
+</html>

@@ -1,0 +1,130 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={`404 — ${SITE_TITLE}`} description="Page not found" />
+	</head>
+	<body>
+		<Header />
+		<main class="not-found">
+			<div class="container">
+				<div class="kicker mono uppercase">
+					<span class="muted-3">N°</span>
+					<span class="muted-1">404</span>
+					<span class="muted-4">/</span>
+					<span class="muted-1">Not Found</span>
+				</div>
+
+				<h1 class="big display">404<span class="period">.</span></h1>
+
+				<p class="lead">
+					这条路径在仓库里找不到对应文件。
+				</p>
+				<p class="hint mono uppercase muted-2">
+					Either the URL was mistyped, or the page moved.
+				</p>
+
+				<div class="actions">
+					<a class="btn mono uppercase" href="/">
+						<span class="arrow muted-3">→</span>
+						<span>Home</span>
+					</a>
+					<a class="btn mono uppercase" href="/blog">
+						<span class="arrow muted-3">→</span>
+						<span>Writing</span>
+					</a>
+				</div>
+			</div>
+		</main>
+		<Footer />
+
+		<style>
+			.not-found {
+				padding: var(--s-10) 0 var(--s-9);
+				min-height: 60vh;
+			}
+			.kicker {
+				display: inline-flex;
+				gap: 8px;
+				margin-bottom: var(--s-7);
+				font-size: var(--text-mono);
+			}
+			.big {
+				font-family: var(--font-display);
+				font-weight: 800;
+				font-size: clamp(96px, 26vw, 320px);
+				line-height: 0.85;
+				letter-spacing: -0.06em;
+				margin: 0;
+				color: var(--fg);
+			}
+			.period {
+				color: var(--mute-3);
+			}
+			.lead {
+				margin: var(--s-7) 0 var(--s-3);
+				font-size: 20px;
+				color: var(--fg);
+				max-width: 520px;
+			}
+			.hint {
+				font-size: var(--text-mono);
+				max-width: 520px;
+			}
+			.actions {
+				margin-top: var(--s-7);
+				display: flex;
+				flex-wrap: wrap;
+				gap: var(--s-4);
+			}
+			.btn {
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+				padding: 12px 18px;
+				border: 1px solid var(--line-strong);
+				color: var(--fg);
+				font-size: var(--text-mono);
+				transition: background 0.15s ease, border-color 0.15s ease;
+			}
+			.btn:hover {
+				border-color: var(--fg);
+				background: rgba(250, 250, 250, 0.03);
+			}
+
+			@media (max-width: 920px) {
+				.not-found {
+					padding: var(--s-9) 0 var(--s-7);
+				}
+				.kicker {
+					margin-bottom: var(--s-5);
+				}
+				.lead {
+					font-size: 18px;
+				}
+			}
+
+			@media (max-width: 560px) {
+				.not-found {
+					padding: var(--s-7) 0 var(--s-6);
+				}
+				.lead {
+					font-size: 17px;
+				}
+				.actions {
+					gap: var(--s-3);
+				}
+				.btn {
+					padding: 10px 14px;
+					font-size: 11px;
+				}
+			}
+		</style>
+	</body>
+</html>

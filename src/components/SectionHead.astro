@@ -1,0 +1,114 @@
+---
+interface Props {
+	index: string;
+	kicker: string;
+	title: string;
+	subtitle?: string;
+	meta?: string[];
+}
+
+const { index, kicker, title, subtitle, meta = [] } = Astro.props;
+---
+
+<section class="section-head frame">
+	<div class="kicker mono uppercase">
+		<span class="muted-3">N°</span>
+		<span class="muted-1">{index}</span>
+		<span class="slash muted-4">/</span>
+		<span class="muted-1">{kicker}</span>
+	</div>
+
+	<h1 class="display-title">
+		{title}
+	</h1>
+
+	{subtitle && <p class="subtitle" set:html={subtitle} />}
+
+	{meta.length > 0 && (
+		<div class="meta-row">
+			{meta.map((item) => (
+				<span class="meta-item mono uppercase muted-2" set:html={item} />
+			))}
+		</div>
+	)}
+</section>
+
+<style>
+	.section-head {
+		padding: var(--s-9) 0 var(--s-7);
+		border-bottom: 1px solid var(--line);
+	}
+	.kicker {
+		display: inline-flex;
+		gap: 8px;
+		margin-bottom: var(--s-7);
+	}
+	.slash {
+		margin: 0 2px;
+	}
+	.display-title {
+		font-family: var(--font-display);
+		font-weight: 700;
+		font-size: var(--display-2);
+		letter-spacing: -0.045em;
+		line-height: 0.92;
+		margin: 0;
+		color: var(--fg);
+	}
+	.subtitle {
+		margin: var(--s-5) 0 0;
+		max-width: 640px;
+		color: var(--mute-1);
+		font-size: 17px;
+		line-height: 1.6;
+	}
+	.meta-row {
+		display: flex;
+		flex-wrap: wrap;
+		gap: var(--s-6);
+		margin-top: var(--s-6);
+		padding-top: var(--s-5);
+		border-top: 1px solid var(--line);
+	}
+	.meta-item {
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+	}
+
+	@media (max-width: 920px) {
+		.section-head {
+			padding: var(--s-8) 0 var(--s-6);
+		}
+		.kicker {
+			margin-bottom: var(--s-6);
+		}
+		.subtitle {
+			font-size: 16px;
+		}
+		.meta-row {
+			gap: var(--s-4);
+		}
+	}
+
+	@media (max-width: 560px) {
+		.section-head {
+			padding: var(--s-7) 0 var(--s-5);
+		}
+		.kicker {
+			margin-bottom: var(--s-5);
+		}
+		.display-title {
+			font-size: clamp(48px, 14vw, 80px);
+		}
+		.subtitle {
+			font-size: 15px;
+		}
+		.meta-row {
+			flex-direction: column;
+			gap: var(--s-2);
+			margin-top: var(--s-5);
+			padding-top: var(--s-4);
+		}
+	}
+</style>

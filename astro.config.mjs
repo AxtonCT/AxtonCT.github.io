@@ -16,7 +16,7 @@ export default defineConfig({
           provider: fontProviders.local(),
           name: 'Atkinson',
           cssVariable: '--font-atkinson',
-          fallbacks: ['sans-serif'],
+          fallbacks: ['Georgia', 'serif'],
           options: {
               variants: [
                   {
@@ -33,6 +33,24 @@ export default defineConfig({
                   },
               ],
           },
+      },
+      {
+          provider: fontProviders.google(),
+          name: 'Bricolage Grotesque',
+          cssVariable: '--font-display',
+          weights: [400, 500, 600, 700, 800],
+          styles: ['normal'],
+          subsets: ['latin'],
+          fallbacks: ['system-ui', '-apple-system', 'sans-serif'],
+      },
+      {
+          provider: fontProviders.google(),
+          name: 'JetBrains Mono',
+          cssVariable: '--font-mono',
+          weights: [400, 500],
+          styles: ['normal'],
+          subsets: ['latin'],
+          fallbacks: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
 	],
 

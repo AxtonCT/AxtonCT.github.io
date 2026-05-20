@@ -1,6 +1,8 @@
 ---
 title: 'Hello, world'
+subtitle: 'first transmission · 博客上线'
 description: '博客刚上线，第一篇正经文章还在写'
+tag: 'Meta'
 pubDate: '2026-05-20'
 ---
 

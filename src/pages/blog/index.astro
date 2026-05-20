@@ -1,114 +1,85 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import BaseHead from '../../components/BaseHead.astro';
 import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
 import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
+import SectionHead from '../../components/SectionHead.astro';
+import PostEntry from '../../components/PostEntry.astro';
+import { SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+// Unique tags from posts, drop empties
+const tags = Array.from(
+	new Set(posts.map((p) => p.data.tag).filter((t): t is string => !!t)),
+);
+
+const subtitle =
+	'<span>长文为主、慢更新。</span> <em>每篇都按"过半年回头看仍然觉得有用"的标准写。</em>';
+
+const meta = [
+	`<span class="muted-1"><strong>${posts.length}</strong></span> entries`,
+	`2026 onward`,
+	tags.length > 0 ? `Tags · ${tags.join(' · ')}` : 'Tags · uncategorized',
+];
+
+// Rough read time estimate from body length (200 cn chars/min, 200 en words/min approx)
+function estimateMinutes(body?: string): number | undefined {
+	if (!body) return undefined;
+	const cn = (body.match(/[一-鿿]/g) || []).length;
+	const en = (body.match(/[A-Za-z]+/g) || []).length;
+	const min = Math.max(1, Math.round(cn / 350 + en / 200));
+	return min;
+}
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main {
-				width: 960px;
-			}
-			ul {
-				display: flex;
-				flex-wrap: wrap;
-				gap: 2rem;
-				list-style-type: none;
-				margin: 0;
-				padding: 0;
-			}
-			ul li {
-				width: calc(50% - 1rem);
-			}
-			ul li * {
-				text-decoration: none;
-				transition: 0.2s ease;
-			}
-			ul li:first-child {
-				width: 100%;
-				margin-bottom: 1rem;
-				text-align: center;
-			}
-			ul li:first-child img {
-				width: 100%;
-			}
-			ul li:first-child .title {
-				font-size: 2.369rem;
-			}
-			ul li img {
-				margin-bottom: 0.5rem;
-				border-radius: 12px;
-			}
-			ul li a {
-				display: block;
-			}
-			.title {
-				margin: 0;
-				color: rgb(var(--black));
-				line-height: 1;
-			}
-			.date {
-				margin: 0;
-				color: rgb(var(--gray));
-			}
-			ul li a:hover h4,
-			ul li a:hover .date {
-				color: rgb(var(--accent));
-			}
-			ul a:hover img {
-				box-shadow: var(--box-shadow);
-			}
-			@media (max-width: 720px) {
-				ul {
-					gap: 0.5em;
-				}
-				ul li {
-					width: 100%;
-					text-align: center;
-				}
-				ul li:first-child {
-					margin-bottom: 0;
-				}
-				ul li:first-child .title {
-					font-size: 1.563em;
-				}
-			}
-		</style>
+		<BaseHead title={`Writing — ${SITE_TITLE}`} description="AxtonDex 的写作列表" />
 	</head>
 	<body>
 		<Header />
 		<main>
-			<section>
-				<ul>
-					{
-						posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									{post.data.heroImage && (
-										<Image width={720} height={360} src={post.data.heroImage} alt="" />
-									)}
-									<h4 class="title">{post.data.title}</h4>
-									<p class="date">
-										<FormattedDate date={post.data.pubDate} />
-									</p>
-								</a>
-							</li>
-						))
-					}
-				</ul>
-			</section>
+			<div class="container">
+				<SectionHead
+					index="02"
+					kicker="Writing"
+					title="Writing."
+					subtitle={subtitle}
+					meta={meta}
+				/>
+
+				<ol class="entries" aria-label="文章列表">
+					{posts.map((post, i) => (
+						<li>
+							<PostEntry
+								index={i + 1}
+								href={`/blog/${post.id}/`}
+								title={post.data.title}
+								subtitle={post.data.subtitle ?? post.data.description}
+								tag={post.data.tag}
+								pubDate={post.data.pubDate}
+								readMinutes={estimateMinutes(post.body)}
+							/>
+						</li>
+					))}
+				</ol>
+			</div>
 		</main>
 		<Footer />
+
+		<style>
+			main {
+				padding-bottom: var(--s-9);
+			}
+			.entries {
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+		</style>
 	</body>
 </html>
