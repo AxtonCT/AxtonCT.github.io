@@ -1,0 +1,169 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import WorkCard from '../../components/WorkCard.astro';
+import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
+import { SITE_TITLE } from '../../consts';
+
+const works = (await getCollection('works')).sort((a, b) => {
+	const ao = a.data.order ?? 999;
+	const bo = b.data.order ?? 999;
+	if (ao !== bo) return ao - bo;
+	return (b.data.year ?? 0) - (a.data.year ?? 0);
+});
+
+const featured = works.find((w) => w.data.featured) ?? works[0];
+const rest = works.filter((w) => w !== featured);
+
+const years = works.map((w) => w.data.year).filter(Boolean);
+const yearRange = years.length
+	? Math.min(...years) === Math.max(...years)
+		? `${years[0]}`
+		: `${Math.min(...years)}–${String(Math.max(...years)).slice(2)}`
+	: '2026';
+const allStack = Array.from(new Set(works.flatMap((w) => w.data.stack))).slice(0, 6);
+
+const f = featured?.data;
+const fPrimary = f ? f.link ?? f.repo ?? null : null;
+const statusLabels = { live: 'Live', wip: 'WIP', archived: 'Archived' } as const;
+const fStatusLabel = f ? statusLabels[f.status] : '';
+const fMonogram = f ? f.title.trim().charAt(0).toUpperCase() : '';
+---
+
+<BaseLayout title={`Works · ${SITE_TITLE}`} description={`Selected works by ${SITE_TITLE} — 个人作品集，前端工程与 AI 视觉设计的落地项目。`}>
+
+	<section class="pagehead">
+		<div class="container">
+			<div class="crumbs">№ 04 <span class="arr">/</span> <b>Works</b></div>
+			<h1>Works.</h1>
+			<p class="sub">
+				把前端工程与 AI 视觉揉进真实可交付的项目。
+				<span class="cjk"> 这里是挑出来、还拿得出手的几个。</span>
+			</p>
+			<div class="row">
+				<span><b>{works.length}</b> projects</span>
+				<span>{yearRange}</span>
+				{allStack.length > 0 && (
+					<span>stack · <b>{allStack.join(' · ')}</b></span>
+				)}
+			</div>
+		</div>
+	</section>
+
+	{featured && f && (
+		<section class="section" style="border-top:0">
+			<div class="container">
+				<a
+					class="feature"
+					href={fPrimary ?? '#'}
+					target={fPrimary ? '_blank' : undefined}
+					rel={fPrimary ? 'noopener' : undefined}
+				>
+					<div class="vis">
+						<span class="tag">Featured{f.subtitle ? ` · ${f.subtitle}` : ''}</span>
+						{f.heroImage ? (
+							<Image src={f.heroImage} alt={`${f.title} preview`} width={720} height={576} />
+						) : (
+							<span class="feat-mono" aria-hidden="true">{fMonogram}</span>
+						)}
+						<span class="num">{f.year} · {fStatusLabel}</span>
+					</div>
+					<div>
+						<div class="lab">№ 04.0 · Featured</div>
+						<h3>{f.title}</h3>
+						<div class="en">{f.role}{f.subtitle ? ` — ${f.subtitle}` : ''}</div>
+						<p>{f.description}</p>
+						{f.stack.length > 0 && (
+							<ul class="feat-stack">
+								{f.stack.map((s) => <li>{s}</li>)}
+							</ul>
+						)}
+						<span class="more">{fPrimary ? 'Visit project' : 'Coming soon'} <span>→</span></span>
+					</div>
+				</a>
+			</div>
+		</section>
+	)}
+
+	{rest.length > 0 && (
+		<section class="section" style="padding-top:0;border-top:0">
+			<div class="container">
+				<div class="works-grid">
+					{rest.map((w, i) => <WorkCard work={w} index={i + 1} />)}
+				</div>
+			</div>
+		</section>
+	)}
+
+	<section class="works-note">
+		<div class="container">
+			<p>
+				// 示例占位 · 以上为样例项目，逐个替换为真实作品即可 — 编辑
+				<code>src/content/works/*.md</code>（每个 <code>.md</code> 一个项目）。
+			</p>
+		</div>
+	</section>
+
+</BaseLayout>
+
+<style>
+	.cjk { font-family: var(--font-prose); font-style: italic; color: var(--ink); }
+
+	.feat-mono {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-family: var(--font-display);
+		font-size: clamp(80px, 14vw, 180px);
+		font-weight: 500;
+		letter-spacing: -.04em;
+		color: var(--faint);
+		user-select: none;
+	}
+	.feat-stack {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 0;
+		margin: 0 0 24px;
+	}
+	.feat-stack li {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: .06em;
+		text-transform: uppercase;
+		color: var(--ink-mid);
+		border: 1px solid var(--hair);
+		padding: 3px 8px;
+		border-radius: 2px;
+	}
+
+	.works-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 20px;
+	}
+
+	.works-note { padding: 0 32px 90px; }
+	.works-note p {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .04em;
+		line-height: 1.7;
+	}
+	.works-note code {
+		color: var(--ink);
+		background: var(--bg-card);
+		border: 1px solid var(--hair);
+		padding: 1px 6px;
+		font-size: .9em;
+	}
+
+	@media (max-width: 920px) {
+		.works-grid { grid-template-columns: 1fr; gap: 16px; }
+		.works-note { padding: 0 22px 70px; }
+	}
+</style>

@@ -1,0 +1,233 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { Image } from 'astro:assets';
+
+interface Props {
+	work: CollectionEntry<'works'>;
+	index: number;
+}
+const { work, index } = Astro.props;
+const { title, description, year, role, subtitle, stack, link, repo, status, heroImage } = work.data;
+
+const n = `04.${index}`;
+const monogram = title.trim().charAt(0).toUpperCase();
+const statusLabel = { live: 'Live', wip: 'WIP', archived: 'Archived' }[status];
+const hasLinks = Boolean(link || repo);
+---
+
+<article class={`work-card ${status}`}>
+	<div class="vis">
+		{heroImage ? (
+			<Image src={heroImage} alt={`${title} preview`} width={640} height={400} />
+		) : (
+			<span class="mono" aria-hidden="true">{monogram}</span>
+		)}
+		<span class="tag">{statusLabel}{subtitle ? ` · ${subtitle}` : ''}</span>
+		<span class="yr">{year}</span>
+	</div>
+
+	<div class="body">
+		<div class="top">
+			<span class="n">№ {n}</span>
+			<span class="st"><i></i>{statusLabel}</span>
+		</div>
+
+		<h3 class="ttl">
+			{link || repo ? (
+				<a href={link ?? repo} target="_blank" rel="noopener">{title}</a>
+			) : (
+				title
+			)}
+		</h3>
+		<div class="role">{role}</div>
+		<p class="desc">{description}</p>
+
+		{stack.length > 0 && (
+			<ul class="stack">
+				{stack.map((s) => <li>{s}</li>)}
+			</ul>
+		)}
+
+		<div class="links">
+			{link && (
+				<a class="lnk" href={link} target="_blank" rel="noopener">Visit <span>↗</span></a>
+			)}
+			{repo && (
+				<a class="lnk" href={repo} target="_blank" rel="noopener">Repo <span>↗</span></a>
+			)}
+			{!hasLinks && <span class="soon">Placeholder · 替换为真实链接</span>}
+		</div>
+	</div>
+</article>
+
+<style>
+	.work-card {
+		display: flex;
+		flex-direction: column;
+		background: var(--bg-card);
+		border: 1px solid var(--hair);
+		transition: border-color .25s, background .25s, transform .25s;
+	}
+	.work-card:hover {
+		border-color: var(--muted);
+		background: var(--bg-soft);
+		transform: translateY(-2px);
+	}
+
+	.vis {
+		position: relative;
+		aspect-ratio: 16 / 10;
+		overflow: hidden;
+		border-bottom: 1px solid var(--hair);
+		display: grid;
+		place-items: center;
+		background:
+			repeating-linear-gradient(45deg, transparent 0 13px, rgba(250, 250, 250, .02) 13px 14px),
+			var(--bg-card);
+	}
+	.vis :global(img) {
+		position: absolute;
+		inset: 0;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+	.vis .mono {
+		font-family: var(--font-display);
+		font-size: clamp(56px, 9vw, 104px);
+		font-weight: 500;
+		letter-spacing: -.04em;
+		line-height: 1;
+		color: var(--faint);
+		user-select: none;
+	}
+	.vis .tag {
+		position: absolute;
+		top: 12px; left: 12px;
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: .1em;
+		text-transform: uppercase;
+		color: var(--ink);
+		background: rgba(0, 0, 0, .5);
+		border: 1px solid rgba(250, 250, 250, .15);
+		padding: 3px 8px;
+		backdrop-filter: blur(4px);
+		-webkit-backdrop-filter: blur(4px);
+	}
+	.vis .yr {
+		position: absolute;
+		bottom: 12px; right: 14px;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		color: var(--ink-dim);
+		letter-spacing: .04em;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.body {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		padding: 22px 22px 22px;
+	}
+	.body .top {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		margin-bottom: 14px;
+		font-family: var(--font-mono);
+		font-size: 10.5px;
+		letter-spacing: .08em;
+		text-transform: uppercase;
+		color: var(--ink-mid);
+	}
+	.body .top .st { display: inline-flex; align-items: center; gap: 7px; }
+	.body .top .st i {
+		width: 6px; height: 6px;
+		border-radius: 50%;
+		background: var(--ink-mid);
+	}
+	.work-card.live .top .st i {
+		background: var(--ink);
+		animation: wc-pulse 2.4s infinite;
+	}
+	@keyframes wc-pulse {
+		0%, 100% { opacity: .4; transform: scale(1); }
+		50%      { opacity: 1;  transform: scale(1.2); }
+	}
+
+	.ttl {
+		margin: 0 0 6px;
+		font-size: clamp(22px, 2.4vw, 30px);
+		line-height: 1.1;
+		letter-spacing: -.02em;
+		font-weight: 500;
+		color: var(--ink);
+	}
+	.ttl a { color: var(--ink); transition: color .2s; }
+	.ttl a:hover { color: var(--ink-dim); }
+
+	.role {
+		font-family: var(--font-mono);
+		font-size: 11px;
+		color: var(--ink-mid);
+		letter-spacing: .04em;
+		margin-bottom: 14px;
+	}
+	.desc {
+		color: var(--ink-dim);
+		font-size: 14.5px;
+		line-height: 1.55;
+		margin: 0 0 18px;
+		text-wrap: pretty;
+	}
+
+	.stack {
+		list-style: none;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 6px;
+		padding: 0;
+		margin: 0 0 20px;
+	}
+	.stack li {
+		font-family: var(--font-mono);
+		font-size: 10px;
+		letter-spacing: .06em;
+		text-transform: uppercase;
+		color: var(--ink-mid);
+		border: 1px solid var(--hair);
+		padding: 3px 8px;
+		border-radius: 2px;
+	}
+
+	.links {
+		margin-top: auto;
+		display: flex;
+		gap: 22px;
+		padding-top: 16px;
+		border-top: 1px solid var(--hair);
+		font-family: var(--font-mono);
+		font-size: 11px;
+		letter-spacing: .08em;
+		text-transform: uppercase;
+	}
+	.links .lnk {
+		color: var(--ink);
+		display: inline-flex;
+		align-items: center;
+		gap: 6px;
+		padding-bottom: 3px;
+		border-bottom: 1px solid var(--muted);
+		transition: border-color .2s;
+	}
+	.links .lnk:hover { border-color: var(--ink); }
+	.links .lnk span { transition: transform .2s; display: inline-block; }
+	.links .lnk:hover span { transform: translate(2px, -2px); }
+	.links .soon { color: var(--muted); letter-spacing: .04em; }
+
+	@media (max-width: 560px) {
+		.body { padding: 18px; }
+	}
+</style>
